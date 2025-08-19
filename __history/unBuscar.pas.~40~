@@ -1,0 +1,65 @@
+unit unBuscar;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
+  Vcl.DBGrids, Vcl.ExtCtrls, Data.Win.ADODB;
+
+type
+  TForm2 = class(TForm)
+    Panel1: TPanel;
+    DBGrid1: TDBGrid;
+    btnBuscar: TButton;
+    Button1: TButton;
+    ADOQuery1: TADOQuery;
+    ADOConnection1: TADOConnection;
+    DataSource1: TDataSource;
+    procedure Button1Click(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
+  private
+    FSelecionado: Integer;
+  public
+    function SelecionarEmpresa: Integer;
+  end;
+
+var
+  Form2: TForm2;
+
+implementation
+
+uses unPrincipal;
+{$R *.dfm}
+
+procedure TForm2.Button1Click(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TForm2.DBGrid1CellClick(Column: TColumn);
+begin
+
+  FSelecionado := ADOQuery1.FieldByName('CODFILIAL').AsInteger;
+  ModalResult := mrOk; // fecha o form e retorna o resultadoend;
+
+  showMessage('PASSOU AQUI 1');
+end;
+
+function TForm2.SelecionarEmpresa: Integer;
+begin
+  FSelecionado := -1;
+
+  // Mostra a tela de busca
+  if ShowModal = mrOk then
+    showMessage('PASSOU AQUI 3');
+    Result := FSelecionado
+  else
+    showMessage('PASSOU AQUI 3');
+    Result := -1;
+
+showMessage('PASSOU AQUI 2');
+end;
+
+
+end.

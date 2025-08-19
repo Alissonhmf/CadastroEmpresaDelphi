@@ -1,0 +1,60 @@
+unit unBuscar;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
+  Vcl.DBGrids, Vcl.ExtCtrls, Data.Win.ADODB;
+
+type
+  TForm2 = class(TForm)
+    Panel1: TPanel;
+    DBGrid1: TDBGrid;
+    btnBuscar: TButton;
+    Button1: TButton;
+    ADOQuery1: TADOQuery;
+    ADOConnection1: TADOConnection;
+    DataSource1: TDataSource;
+    procedure Button1Click(Sender: TObject);
+    procedure DBGrid1CellClick(Column: TColumn);
+  private
+    FSelecionado: Integer;
+  public
+    function SelecionarEmpresa: Integer;
+  end;
+
+var
+  Form2: TForm2;
+
+implementation
+
+uses unPrincipal;
+{$R *.dfm}
+
+procedure TForm2.Button1Click(Sender: TObject);
+begin
+  Close;
+end;
+
+function TForm2.SelecionarEmpresa: Integer;
+begin
+  FSelecionado := -1;
+  Result := -1;                 // valor padrão
+
+  if ShowModal = mrOk then
+    Result := FSelecionado;     // só retorna o selecionado se foi OK
+end;
+
+procedure TForm2.DBGrid1CellClick(Column: TColumn);
+// ou use DBGrid1DblClick se quiser por duplo clique
+begin
+  if not ADOQuery1.IsEmpty then
+  begin
+    FSelecionado := ADOQuery1.FieldByName('CODFILIAL').AsInteger;
+    ModalResult := mrOk;        // fecha modal e devolve mrOk
+  end;
+end;
+
+
+end.

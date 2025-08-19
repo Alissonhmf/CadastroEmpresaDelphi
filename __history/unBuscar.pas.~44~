@@ -1,0 +1,65 @@
+unit unBuscar;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
+  Vcl.DBGrids, Vcl.ExtCtrls, Data.Win.ADODB;
+
+type
+  TForm2 = class(TForm)
+    Panel1: TPanel;
+    DBGrid1: TDBGrid;
+    btnBuscar: TButton;
+    Button1: TButton;
+    ADOQuery1: TADOQuery;
+    ADOConnection1: TADOConnection;
+    DataSource1: TDataSource;
+    procedure Button1Click(Sender: TObject);
+    procedure DBGrid1DblClick(Sender: TObject);
+  private
+    FSelecionado: Integer;
+  public
+    function SelecionarEmpresa: Integer;
+  end;
+
+var
+  Form2: TForm2;
+
+implementation
+
+uses unPrincipal;
+{$R *.dfm}
+
+procedure TForm2.Button1Click(Sender: TObject);
+begin
+  Close;
+end;
+
+function TForm2.SelecionarEmpresa: Integer;
+begin
+  FSelecionado := -1;
+  Result := -1;                 // valor padrão
+
+  if ShowModal = mrOk then
+    Result := FSelecionado;     // só retorna o selecionado se foi OK
+end;
+
+procedure TForm2.DBGrid1DblClick(Sender: TObject);
+var
+  Codigo: Integer;
+begin
+  if not DBGrid1.DataSource.DataSet.IsEmpty then
+  begin
+    Codigo := DBGrid1.DataSource.DataSet.FieldByName('CODFILIAL').AsInteger;
+
+    // Aqui você chama a função de outra unit
+    Form1.CarregarEmpresa(Codigo);
+
+    Close; // fecha a tela de busca
+  end;
+end;
+
+
+end.
