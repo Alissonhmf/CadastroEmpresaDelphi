@@ -176,73 +176,101 @@ end;
 
 procedure TForm1.CarregarEmpresa(Codigo: Integer);
 var
-  qry: TADOQuery;
+  qryEmpresa,qryParam: TADOQuery;
 begin
-  qry := TADOQuery.Create(nil);
+  qryEmpresa := TADOQuery.Create(nil);
   try
-    qry.Connection := ADOConnection1;
-    qry.SQL.Text :=
+    qryEmpresa.Connection := ADOConnection1;
+    qryEmpresa.SQL.Clear;
+    qryEmpresa.SQL.Text :=
       'SELECT * FROM AC_CADASTRO_EMPRESA WHERE CODFILIAL = :CODFILIAL';
-    qry.Parameters.ParamByName('CODFILIAL').Value := Format('%.2d', [Codigo]); // <=== use o parâmetro
-    qry.Open;
+    qryEmpresa.Parameters.ParamByName('CODFILIAL').Value := Format('%.2d', [Codigo]); // <=== use o parâmetro
+    qryEmpresa.Open;
 
-    if qry.IsEmpty then
+    if qryEmpresa.IsEmpty then
     begin
       ShowMessage('Empresa não encontrada!');
       Exit;
     end;
 
     // -------- Identificação / cadastro --------
-    edtCodigo.Text       := qry.FieldByName('CODFILIAL').AsString;
-    edtRazaoSocial.Text  := qry.FieldByName('FILIAL').AsString;
-    edtFantasia.Text     := qry.FieldByName('NOMEFANTASIA').AsString;
-    edtCnpj.Text         := qry.FieldByName('CPFCNPJ').AsString;
-    edtIe.Text           := qry.FieldByName('IE').AsString;
-    edtEmail.Text        := qry.FieldByName('EMAIL').AsString;
-    edtCodCli.Text       := qry.FieldByName('CODCLI').AsString;
-    edtCodFornec.Text    := qry.FieldByName('CODFORNEC').AsString;
-    edtTelefone.Text     := qry.FieldByName('TELEFONE').AsString;
+    edtCodigo.Text       := qryEmpresa.FieldByName('CODFILIAL').AsString;
+    edtRazaoSocial.Text  := qryEmpresa.FieldByName('FILIAL').AsString;
+    edtFantasia.Text     := qryEmpresa.FieldByName('NOMEFANTASIA').AsString;
+    edtCnpj.Text         := qryEmpresa.FieldByName('CPFCNPJ').AsString;
+    edtIe.Text           := qryEmpresa.FieldByName('IE').AsString;
+    edtEmail.Text        := qryEmpresa.FieldByName('EMAIL').AsString;
+    edtCodCli.Text       := qryEmpresa.FieldByName('CODCLI').AsString;
+    edtCodFornec.Text    := qryEmpresa.FieldByName('CODFORNEC').AsString;
+    edtTelefone.Text     := qryEmpresa.FieldByName('TELEFONE').AsString;
 
     // -------- Endereço da empresa --------
-    edtEndereco.Text      := qry.FieldByName('ENDERECO').AsString;
-    edtBairro.Text        := qry.FieldByName('BAIRRO').AsString;
-    edtCidade.Text        := qry.FieldByName('CIDADE').AsString;
-    edtCep.Text           := qry.FieldByName('CEP').AsString;
-    edtComplemento.Text   := qry.FieldByName('COMPLEMENTO').AsString;
-    edtCodMunicipio.Text  := qry.FieldByName('CODMUNICIPIO').AsString;
-    cbUf.Text             := qry.FieldByName('UF').AsString;
+    edtEndereco.Text      := qryEmpresa.FieldByName('ENDERECO').AsString;
+    edtBairro.Text        := qryEmpresa.FieldByName('BAIRRO').AsString;
+    edtCidade.Text        := qryEmpresa.FieldByName('CIDADE').AsString;
+    edtCep.Text           := qryEmpresa.FieldByName('CEP').AsString;
+    edtComplemento.Text   := qryEmpresa.FieldByName('COMPLEMENTO').AsString;
+    edtCodMunicipio.Text  := qryEmpresa.FieldByName('CODMUNICIPIO').AsString;
+    cbUf.Text             := qryEmpresa.FieldByName('UF').AsString;
 
     // -------- Numeração / configurações fiscais --------
-    edtProxNumNfe.Text    := qry.FieldByName('PROXNUMNOTA').AsString;
-    edtSerie.Text         := qry.FieldByName('SERIE').AsString;
-    cbTipoTribut.Text     := qry.FieldByName('TIPOTRIBUT').AsString;
-    edtProxNumNfce.Text   := qry.FieldByName('PROXNUMNFCONSUMIDOR').AsString;
-    edtDirNfe.Text        := qry.FieldByName('DIRNFE').AsString;
-    edtProxNumCte.Text    := qry.FieldByName('PROXNUMCONHEC').AsString;
-    edtProxNumMdfe.Text   := qry.FieldByName('PROXNUMMDFE').AsString;
-    edtDirMdfe.Text       := qry.FieldByName('DIRMDFE').AsString;
-    cbTransportadora.Text := qry.FieldByName('TRANSPORTADORA').AsString;
-    edtPerProtege.Text    := qry.FieldByName('PER_PROTEGE').AsString;
-    cbEnviarapp.Text      := qry.FieldByName('DISP_APP').AsString;
-    cbBloqNfNContribEstadual.Text  := qry.FieldByName('BLOQ_NF_N_CONTRIB_ESTADUAL').AsString;
-    cbBloqNfNContribInter.Text     := qry.FieldByName('BLOQ_NF_N_CONTRIB_INTEREST').AsString;
-    cbBloqNfPfEstadual.Text        := qry.FieldByName('BLOQ_NF_PF_ESTADUAL').AsString;
-    cbBloqNfPfInter.Text           := qry.FieldByName('BLOQ_NF_PF_INTEREST').AsString;
+    edtProxNumNfe.Text    := qryEmpresa.FieldByName('PROXNUMNOTA').AsString;
+    edtSerie.Text         := qryEmpresa.FieldByName('SERIE').AsString;
+    cbTipoTribut.Text     := qryEmpresa.FieldByName('TIPOTRIBUT').AsString;
+    edtProxNumNfce.Text   := qryEmpresa.FieldByName('PROXNUMNFCONSUMIDOR').AsString;
+    edtDirNfe.Text        := qryEmpresa.FieldByName('DIRNFE').AsString;
+    edtProxNumCte.Text    := qryEmpresa.FieldByName('PROXNUMCONHEC').AsString;
+    edtProxNumMdfe.Text   := qryEmpresa.FieldByName('PROXNUMMDFE').AsString;
+    edtDirMdfe.Text       := qryEmpresa.FieldByName('DIRMDFE').AsString;
+    cbTransportadora.Text := qryEmpresa.FieldByName('TRANSPORTADORA').AsString;
+    edtPerProtege.Text    := qryEmpresa.FieldByName('PER_PROTEGE').AsString;
+    cbEnviarapp.Text      := qryEmpresa.FieldByName('DISP_APP').AsString;
+    cbBloqNfNContribEstadual.Text  := qryEmpresa.FieldByName('BLOQ_NF_N_CONTRIB_ESTADUAL').AsString;
+    cbBloqNfNContribInter.Text     := qryEmpresa.FieldByName('BLOQ_NF_N_CONTRIB_INTEREST').AsString;
+    cbBloqNfPfEstadual.Text        := qryEmpresa.FieldByName('BLOQ_NF_PF_ESTADUAL').AsString;
+    cbBloqNfPfInter.Text           := qryEmpresa.FieldByName('BLOQ_NF_PF_INTEREST').AsString;
 
     // -------- Dados do contador --------
-    edtNomeContador.Text       := qry.FieldByName('CONTADORNOME').AsString;
-    edtCpfCnpjContador.Text    := qry.FieldByName('CONTADORCPFCNPJ').AsString;
-    edtCrcContador.Text        := qry.FieldByName('CONTADORCRC').AsString;
-    cbUfContador.Text          := qry.FieldByName('CONTADORUF').AsString;
-    edtCepContador.Text        := qry.FieldByName('CONTADORCEP').AsString;
-    edtEnderecoContador.Text   := qry.FieldByName('CONTADORENDERECO').AsString;
-    edtComplementoContador.Text:= qry.FieldByName('CONTADORCOMPLEMENTO').AsString;
-    edtBairroContador.Text     := qry.FieldByName('CONTADORBAIRRO').AsString;
-    edtTelefoneContador.Text   := qry.FieldByName('CONTADORTELEFONE').AsString;
-    edtEmailContador.Text      := qry.FieldByName('CONTADOREMAIL').AsString;
+    edtNomeContador.Text       := qryEmpresa.FieldByName('CONTADORNOME').AsString;
+    edtCpfCnpjContador.Text    := qryEmpresa.FieldByName('CONTADORCPFCNPJ').AsString;
+    edtCrcContador.Text        := qryEmpresa.FieldByName('CONTADORCRC').AsString;
+    cbUfContador.Text          := qryEmpresa.FieldByName('CONTADORUF').AsString;
+    edtCepContador.Text        := qryEmpresa.FieldByName('CONTADORCEP').AsString;
+    edtEnderecoContador.Text   := qryEmpresa.FieldByName('CONTADORENDERECO').AsString;
+    edtComplementoContador.Text:= qryEmpresa.FieldByName('CONTADORCOMPLEMENTO').AsString;
+    edtBairroContador.Text     := qryEmpresa.FieldByName('CONTADORBAIRRO').AsString;
+    edtTelefoneContador.Text   := qryEmpresa.FieldByName('CONTADORTELEFONE').AsString;
+    edtEmailContador.Text      := qryEmpresa.FieldByName('CONTADOREMAIL').AsString;
 
   finally
-    qry.Free;
+    qryEmpresa.Free;
+  end;
+
+  qryParam := TADOQuery.Create(nil);
+   try
+    qryParam.Connection := ADOConnection1;
+    qryParam.SQL.Clear;
+    qryParam.SQL.Text :=
+      'SELECT * FROM AC_CADASTRO_PARAMETRIZACAO';
+    qryParam.Open;
+
+   if qryParam.IsEmpty then
+    begin
+      ShowMessage('Falha ao abrir cadastro de parametrização!');
+      Exit;
+    end;
+
+
+    // -------- Parametrizações / cadastro --------
+    edtDirTelas.Text        := qryParam.FieldByName('DIRETORIO_TELAS').AsString;
+    edtProxCodCli.Text      := qryParam.FieldByName('PROXCODCLI').AsString;
+    edtProxCodFornec.Text   := qryParam.FieldByName('PROXCODFORNEC').AsString;
+    edtProxCodProd.Text     := qryParam.FieldByName('PROXCODPROD').AsString;
+    cbUsaCredIcms.Text      := qryParam.FieldByName('USACREDICM').AsString;
+    cbUsaCredPisCofins.Text      := qryParam.FieldByName('USACREDPISCOFINS').AsString;
+
+  finally
+    qryParam.Free;
   end;
 end;
 
@@ -303,6 +331,8 @@ begin
 
 
   showMessage(Lista.Text);
+
+  quemChamou:= '';
 end;
 
 
@@ -312,6 +342,8 @@ var
 proxCod: Integer;
 
 begin
+
+ LimparCampos;
 
  btnBuscar.Enabled:= False;
  btnNovo.Enabled:= False;

@@ -133,8 +133,6 @@ object Form1: TForm1
     ParentFont = False
     TabOrder = 1
     TabWidth = 233
-    ExplicitLeft = 6
-    ExplicitTop = 53
     object tsCadastro: TTabSheet
       AlignWithMargins = True
       Margins.Left = 0
@@ -751,7 +749,6 @@ object Form1: TForm1
         Height = 179
         Align = alBottom
         TabOrder = 5
-        ExplicitTop = 122
         object lbEnderecoContador: TLabel
           Left = 6
           Top = 1
