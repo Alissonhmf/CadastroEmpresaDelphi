@@ -137,6 +137,8 @@ type
     procedure btnBuscarClick(Sender: TObject);
     procedure CarregarEmpresa(Codigo: Integer);
     procedure btnEditarClick(Sender: TObject);
+    procedure InsertEmpresa(Lista: TStringList);
+    procedure UpdateEmpresa(Lista: TStringList);
   private
     { Private declarations }
   public
@@ -316,24 +318,21 @@ procedure TForm1.btnGravarClick(Sender: TObject);
 var
   Lista: TStringList;
 begin
+  Lista := MontaCamposValores;
+  try
+    if quemChamou = 'Editar' then
+      UpdateEmpresa(Lista)
+    else if quemChamou = 'Novo' then
+      InsertEmpresa(Lista);
 
-  if quemChamou = 'Editar' then
-  begin
-    showMessage('Fazer Comando de Update');
-    Lista:= MontaCamposValores;
+    quemChamou := '';
+  finally
+    Lista.Free;
   end;
 
-  if quemChamou = 'Novo' then
-  begin
-    showMessage('Fazer Comando de Insert');
-    Lista:= MontaCamposValores;
-  end;
-
-
-  showMessage(Lista.Text);
-
-  quemChamou:= '';
+  btnCancelarClick(Sender);
 end;
+
 
 
 procedure TForm1.btnNovoClick(Sender: TObject);
@@ -355,7 +354,7 @@ begin
  tsContador.Enabled:= True;
  tsFiscal.Enabled:= True;
 
- edtCodigo.Text:= InttoStr(ProxCodEmpresa);
+ edtCodigo.Text:= ('0'+InttoStr(ProxCodEmpresa));
 
  quemChamou:= 'Novo';
 
@@ -392,28 +391,28 @@ begin
   cbtipotribut.Items.AddStrings(['1 - Simples Nacional','2 - Lucro Presumido', '3 - Lucro Real' ]);
 
   cbEnviarApp.Items.Clear;
-  cbEnviarApp.Items.AddStrings(['Sim','Não']);
+  cbEnviarApp.Items.AddStrings(['S','N']);
 
   cbTransportadora.Items.Clear;
-  cbTransportadora.Items.AddStrings(['Sim','Não']);
+  cbTransportadora.Items.AddStrings(['S','N']);
 
   cbBloqNfNContribEstadual.Items.Clear;
-  cbBloqNfNContribEstadual.Items.AddStrings(['Sim','Não']);
+  cbBloqNfNContribEstadual.Items.AddStrings(['S','N']);
 
   cbBloqNfNContribInter.Items.Clear;
-  cbBloqNfNContribInter.Items.AddStrings(['Sim','Não']);
+  cbBloqNfNContribInter.Items.AddStrings(['S','N']);
 
   cbBloqNfPfEstadual.Items.Clear;
-  cbBloqNfPfEstadual.Items.AddStrings(['Sim','Não']);
+  cbBloqNfPfEstadual.Items.AddStrings(['S','N']);
 
   cbBloqNfPfInter.Items.Clear;
-  cbBloqNfPfInter.Items.AddStrings(['Sim','Não']);
+  cbBloqNfPfInter.Items.AddStrings(['S','N']);
 
   cbUsaCredPisCofins.Items.Clear;
-  cbUsaCredPisCofins.Items.AddStrings(['Sim','Não']);
+  cbUsaCredPisCofins.Items.AddStrings(['S','N']);
 
   cbUsaCredIcms.Items.Clear;
-  cbUsaCredIcms.Items.AddStrings(['Sim','Não']);
+  cbUsaCredIcms.Items.AddStrings(['S','N']);
 
 end;
 
@@ -450,7 +449,6 @@ begin
     begin
      proxCodEmpresa:= ADOQuery1.FieldByName('CODFILIAL').AsInteger + 1;
     end;
-
 
     result:= proxCodEmpresa;
 
@@ -491,7 +489,7 @@ begin
   // -------- Numeração / configurações fiscais --------
   if Trim(edtProxNumNfe.Text) <> ''    then Result.Add('PROXNUMNOTA='           + Trim(edtProxNumNfe.Text));
   if Trim(edtSerie.Text) <> ''         then Result.Add('SERIE='                 + Trim(edtSerie.Text));
-  if Trim(cbTipoTribut.Text) <> ''     then Result.Add('TIPOTRIBUT='            + Trim(cbTipoTribut.Text));
+  //if Trim(cbTipoTribut.Text) <> ''     then Result.Add('TIPOTRIBUT='            + Trim(cbTipoTribut.Text));
   if Trim(edtProxNumNfce.Text) <> ''   then Result.Add('PROXNUMNFCONSUMIDOR='   + Trim(edtProxNumNfce.Text));
   if Trim(edtDirNfe.Text) <> ''        then Result.Add('DIRNFE='                + Trim(edtDirNfe.Text));
   if Trim(edtProxNumCte.Text) <> ''    then Result.Add('PROXNUMCONHEC='         + Trim(edtProxNumCte.Text));
@@ -560,5 +558,82 @@ begin
   else
     edtNomeFornec.Clear; // se apagar o código, limpa também o nome
 end;
+
+// Função responsável por inserir uma nova empresa no banco
+procedure TForm1.InsertEmpresa(Lista: TStringList);
+var
+  qry: TADOQuery;
+  Campos, Valores: string;
+  i: Integer;
+begin
+  qry := TADOQuery.Create(nil);
+  try
+    qry.Connection := ADOConnection1;
+
+    Campos := '';
+    Valores := '';
+
+    // Percorre a lista "CAMPO=VALOR" e monta duas strings:
+    // uma só com os nomes dos campos e outra só com os valores
+    for i := 0 to Lista.Count - 1 do
+    begin
+      Campos := Campos + Lista.Names[i] + ', ';
+      Valores := Valores + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
+    end;
+
+    // Remove a vírgula extra do final
+    Delete(Campos, Length(Campos)-1, 2);
+    Delete(Valores, Length(Valores)-1, 2);
+
+    // Monta o SQL de insert
+    qry.SQL.Text :=
+      'INSERT INTO AC_CADASTRO_EMPRESA (' + Campos + ') ' +
+      'VALUES (' + Valores + ')';
+
+    qry.ExecSQL; // Executa o comando
+
+    ShowMessage('Registro inserido com sucesso!');
+  finally
+    qry.Free;
+  end;
+end;
+
+
+// Função responsável por atualizar os dados de uma empresa já existente
+procedure TForm1.UpdateEmpresa(Lista: TStringList);
+var
+  qry: TADOQuery;
+  Sets: string;
+  i: Integer;
+begin
+  qry := TADOQuery.Create(nil);
+  try
+    qry.Connection := ADOConnection1;
+
+    Sets := '';
+    // Percorre a lista e cria os pares "CAMPO = VALOR"
+    for i := 0 to Lista.Count - 1 do
+    begin
+      // Evita atualizar a chave primária (CODFILIAL)
+      if UpperCase(Lista.Names[i]) <> 'CODFILIAL' then
+        Sets := Sets + Lista.Names[i] + ' = ' + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
+    end;
+
+    // Remove a vírgula extra
+    Delete(Sets, Length(Sets)-1, 2);
+
+    // Monta o SQL de update
+    qry.SQL.Text :=
+      'UPDATE AC_CADASTRO_EMPRESA SET ' + Sets +
+      ' WHERE CODFILIAL = ' + QuotedStr(edtCodigo.Text);
+
+    qry.ExecSQL;
+
+    ShowMessage('Registro atualizado com sucesso!');
+  finally
+    qry.Free;
+  end;
+end;
+
 
 end.

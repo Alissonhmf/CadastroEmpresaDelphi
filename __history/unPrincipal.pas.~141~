@@ -260,12 +260,14 @@ begin
       Exit;
     end;
 
-    ShowMessage('Abriu cadastro de parametrização!');
+
     // -------- Parametrizações / cadastro --------
-    edtDirTelas.Text   := qryParam.FieldByName('DIRETORIO_TELAS').AsString;
-    ShowMessage('Carregou!');
-
-
+    edtDirTelas.Text        := qryParam.FieldByName('DIRETORIO_TELAS').AsString;
+    edtProxCodCli.Text      := qryParam.FieldByName('PROXCODCLI').AsString;
+    edtProxCodFornec.Text   := qryParam.FieldByName('PROXCODFORNEC').AsString;
+    edtProxCodProd.Text     := qryParam.FieldByName('PROXCODPROD').AsString;
+    cbUsaCredIcms.Text      := qryParam.FieldByName('USACREDICM').AsString;
+    cbUsaCredPisCofins.Text      := qryParam.FieldByName('USACREDPISCOFINS').AsString;
 
   finally
     qryParam.Free;
@@ -329,6 +331,8 @@ begin
 
 
   showMessage(Lista.Text);
+
+  quemChamou:= '';
 end;
 
 
@@ -338,6 +342,8 @@ var
 proxCod: Integer;
 
 begin
+
+ LimparCampos;
 
  btnBuscar.Enabled:= False;
  btnNovo.Enabled:= False;
