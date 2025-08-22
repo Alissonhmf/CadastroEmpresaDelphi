@@ -123,7 +123,7 @@ object Form1: TForm1
     Margins.Top = 1
     Margins.Right = 1
     Margins.Bottom = 1
-    ActivePage = tsFiscal
+    ActivePage = tsCadastro
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -275,6 +275,7 @@ object Form1: TForm1
           Top = 27
           Width = 64
           Height = 23
+          CharCase = ecUpperCase
           Enabled = False
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
@@ -289,6 +290,7 @@ object Form1: TForm1
           Top = 27
           Width = 368
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -302,6 +304,7 @@ object Form1: TForm1
           Top = 75
           Width = 264
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -315,6 +318,7 @@ object Form1: TForm1
           Top = 27
           Width = 231
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -328,6 +332,7 @@ object Form1: TForm1
           Top = 75
           Width = 168
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -341,6 +346,7 @@ object Form1: TForm1
           Top = 123
           Width = 264
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -354,6 +360,7 @@ object Form1: TForm1
           Top = 123
           Width = 168
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -367,6 +374,7 @@ object Form1: TForm1
           Top = 75
           Width = 40
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -381,6 +389,7 @@ object Form1: TForm1
           Top = 123
           Width = 40
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -396,6 +405,7 @@ object Form1: TForm1
           Width = 185
           Height = 23
           TabStop = False
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -411,6 +421,7 @@ object Form1: TForm1
           Width = 185
           Height = 23
           TabStop = False
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -544,6 +555,7 @@ object Form1: TForm1
           Top = 51
           Width = 264
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -557,6 +569,7 @@ object Form1: TForm1
           Top = 51
           Width = 168
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -570,6 +583,7 @@ object Form1: TForm1
           Top = 99
           Width = 168
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -583,6 +597,7 @@ object Form1: TForm1
           Top = 99
           Width = 264
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -596,6 +611,7 @@ object Form1: TForm1
           Top = 51
           Width = 231
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -603,19 +619,23 @@ object Form1: TForm1
           Font.Style = []
           ParentFont = False
           TabOrder = 2
+          OnChange = edtCodmunicipioChange
         end
         object edtCodmunicipio: TEdit
           Left = 450
           Top = 99
           Width = 168
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
           Font.Name = 'Segoe UI'
           Font.Style = []
           ParentFont = False
+          ReadOnly = True
           TabOrder = 5
+          OnChange = edtCodmunicipioChange
         end
         object cbUf: TComboBox
           Left = 624
@@ -707,6 +727,7 @@ object Form1: TForm1
         Top = 27
         Width = 317
         Height = 23
+        CharCase = ecUpperCase
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -720,6 +741,7 @@ object Form1: TForm1
         Top = 27
         Width = 184
         Height = 23
+        CharCase = ecUpperCase
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -733,6 +755,7 @@ object Form1: TForm1
         Top = 27
         Width = 147
         Height = 23
+        CharCase = ecUpperCase
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -832,6 +855,7 @@ object Form1: TForm1
           Top = 51
           Width = 319
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -845,6 +869,7 @@ object Form1: TForm1
           Top = 51
           Width = 337
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -858,6 +883,7 @@ object Form1: TForm1
           Top = 99
           Width = 269
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -871,6 +897,7 @@ object Form1: TForm1
           Top = 99
           Width = 319
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -893,6 +920,7 @@ object Form1: TForm1
         Top = 75
         Width = 337
         Height = 23
+        CharCase = ecUpperCase
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -906,6 +934,7 @@ object Form1: TForm1
         Top = 75
         Width = 317
         Height = 23
+        CharCase = ecUpperCase
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -1100,6 +1129,7 @@ object Form1: TForm1
         Font.Style = []
         ParentFont = False
         TabOrder = 0
+        OnKeyPress = SomenteNumeros
       end
       object edtSerie: TEdit
         Left = 333
@@ -1126,6 +1156,7 @@ object Form1: TForm1
         Font.Style = []
         ParentFont = False
         TabOrder = 3
+        OnKeyPress = SomenteNumeros
       end
       object pn4: TPanel
         AlignWithMargins = True
@@ -1250,6 +1281,7 @@ object Form1: TForm1
           Top = 31
           Width = 302
           Height = 23
+          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -1259,7 +1291,7 @@ object Form1: TForm1
           TabOrder = 0
         end
         object edtProxCodCli: TEdit
-          Left = 108
+          Left = 109
           Top = 79
           Width = 102
           Height = 23
@@ -1270,6 +1302,7 @@ object Form1: TForm1
           Font.Style = []
           ParentFont = False
           TabOrder = 2
+          OnKeyPress = SomenteNumeros
         end
         object edtProxCodFornec: TEdit
           Left = 8
@@ -1283,6 +1316,7 @@ object Form1: TForm1
           Font.Style = []
           ParentFont = False
           TabOrder = 1
+          OnKeyPress = SomenteNumeros
         end
         object edtProxCodProd: TEdit
           Left = 216
@@ -1296,6 +1330,7 @@ object Form1: TForm1
           Font.Style = []
           ParentFont = False
           TabOrder = 3
+          OnKeyPress = SomenteNumeros
         end
         object cbBloqNfNContribEstadual: TComboBox
           Left = 330
@@ -1345,6 +1380,7 @@ object Form1: TForm1
         Font.Style = []
         ParentFont = False
         TabOrder = 6
+        OnKeyPress = SomenteNumeros
       end
       object edtProxNumCte: TEdit
         Left = 168
@@ -1358,6 +1394,7 @@ object Form1: TForm1
         Font.Style = []
         ParentFont = False
         TabOrder = 7
+        OnKeyPress = SomenteNumeros
       end
       object edtProxNumMdfe: TEdit
         Left = 333
@@ -1371,12 +1408,14 @@ object Form1: TForm1
         Font.Style = []
         ParentFont = False
         TabOrder = 8
+        OnKeyPress = SomenteNumeros
       end
       object edtDirNfe: TEdit
         Left = 11
         Top = 127
         Width = 302
         Height = 23
+        CharCase = ecUpperCase
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -1390,6 +1429,7 @@ object Form1: TForm1
         Top = 127
         Width = 329
         Height = 23
+        CharCase = ecUpperCase
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -1434,12 +1474,12 @@ object Form1: TForm1
       'ser ID=Acontec;Data Source=OracleMeuBanco'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
-    Left = 536
+    Left = 568
   end
   object ADOQuery1: TADOQuery
     Connection = ADOConnection1
     Parameters = <>
-    Left = 576
-    Top = 8
+    Left = 568
+    Top = 65528
   end
 end
