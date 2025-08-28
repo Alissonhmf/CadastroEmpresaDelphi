@@ -5,7 +5,11 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls,
-  Data.DB, Data.Win.ADODB, unBuscar;
+  Data.DB, Data.Win.ADODB, unBuscar,  FireDAC.Comp.Client, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Phys.Oracle,
+  FireDAC.Phys.OracleDef, FireDAC.VCLUI.Wait, FireDAC.Comp.DataSet;
 
 type
   TForm1 = class(TForm)
@@ -114,8 +118,6 @@ type
     lbProxCodFornec: TLabel;
     edtProxCodProd: TEdit;
     lbProxCodProd: TLabel;
-    ADOConnection1: TADOConnection;
-    ADOQuery1: TADOQuery;
     cbBloqNfNContribEstadual: TComboBox;
     cbBloqNfNContribInter: TComboBox;
     lbBloqNfNContribInter: TLabel;
@@ -124,6 +126,8 @@ type
     lbBloqNfPfEstadual: TLabel;
     lbBloqNfPfInter: TLabel;
     cbBloqNfPfInter: TComboBox;
+    FDConnection1: TFDConnection;
+    FDQuery1: TFDQuery;
     procedure btnSairClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnNovoClick(Sender: TObject);
@@ -157,6 +161,8 @@ implementation
 {$R *.dfm}
 
 
+//Versao 1 25/08/2025
+
 procedure TForm1.btnBuscarClick(Sender: TObject);
 var
   Codigo: Integer;
@@ -181,15 +187,15 @@ end;
 
 procedure TForm1.CarregarEmpresa(Codigo: Integer);
 var
-  qryEmpresa,qryParam: TADOQuery;
+  qryEmpresa,qryParam: TFDQuery;
 begin
-  qryEmpresa := TADOQuery.Create(nil);
+  qryEmpresa := TFDQuery.Create(nil);
   try
-    qryEmpresa.Connection := ADOConnection1;
+    qryEmpresa.Connection := FDConnection1;
     qryEmpresa.SQL.Clear;
     qryEmpresa.SQL.Text :=
       'SELECT * FROM AC_CADASTRO_EMPRESA WHERE CODFILIAL = :CODFILIAL';
-    qryEmpresa.Parameters.ParamByName('CODFILIAL').Value := Format('%.2d', [Codigo]); // <=== use o parâmetro
+    qryEmpresa.ParamByName('CODFILIAL').AsInteger := Codigo;
     qryEmpresa.Open;
 
     if qryEmpresa.IsEmpty then
@@ -268,9 +274,9 @@ begin
     qryEmpresa.Free;
   end;
 
-  qryParam := TADOQuery.Create(nil);
+  qryParam := TFDQuery.Create(nil);
    try
-    qryParam.Connection := ADOConnection1;
+    qryParam.Connection := FDConnection1;
     qryParam.SQL.Clear;
     qryParam.SQL.Text :=
       'SELECT * FROM AC_CADASTRO_PARAMETRIZACAO';
@@ -494,19 +500,19 @@ var
 proxCodEmpresa: Integer;
 
 begin
-    ADOQuery1.Close;
-    ADOQuery1.SQL.Clear;
-    ADOQuery1.SQL.Add('SELECT MAX(CODFILIAL) AS CODFILIAL FROM AC_CADASTRO_EMPRESA');
-    ADOQuery1.Open;
+    FDQuery1.Close;
+    FDQuery1.SQL.Clear;
+    FDQuery1.SQL.Add('SELECT MAX(CODFILIAL) AS CODFILIAL FROM AC_CADASTRO_EMPRESA');
+    FDQuery1.Open;
 
-    if ADOQuery1.Fields[0].IsNull then
+    if FDQuery1.Fields[0].IsNull then
     begin
       proxCodEmpresa:= 1;
 
     end
     else
     begin
-     proxCodEmpresa:= ADOQuery1.FieldByName('CODFILIAL').AsInteger + 1;
+     proxCodEmpresa:= FDQuery1.FieldByName('CODFILIAL').AsInteger + 1;
     end;
 
     result:= proxCodEmpresa;
@@ -630,226 +636,181 @@ begin
 end;
 
 
+// edtCodCliChange
 procedure TForm1.edtCodCliChange(Sender: TObject);
 begin
   if edtCodigo.Text <> '' then
   begin
     try
-      ADOQuery1.Close;
-      ADOQuery1.SQL.Clear;
-      ADOQuery1.SQL.Add('SELECT CLIENTE FROM AC_CADASTRO_CLIENTES WHERE CODCLI = :codigobuscar');
-      ADOQuery1.Parameters.ParamByName('codigobuscar').Value := edtCodCli.Text;
-      ADOQuery1.Open;
+      FDQuery1.Close;
+      FDQuery1.SQL.Clear;
+      FDQuery1.SQL.Add('SELECT CLIENTE FROM AC_CADASTRO_CLIENTES WHERE CODCLI = :codigobuscar');
+      FDQuery1.Params.ParamByName('codigobuscar').Value := edtCodCli.Text;
+      FDQuery1.Open;
 
-      if not ADOQuery1.Fields[0].IsNull then
-        edtNomeCli.Text := ADOQuery1.Fields[0].AsString
+      if not FDQuery1.Fields[0].IsNull then
+        edtNomeCli.Text := FDQuery1.Fields[0].AsString
       else
         edtNomeCli.Clear;
-
     finally
-      ADOQuery1.Close;
+      FDQuery1.Close;
     end;
   end
   else
-    edtNomeCli.Clear; // se apagar o código, limpa também o nome
+    edtNomeCli.Clear;
 end;
 
+// edtCodFornecChange
 procedure TForm1.edtCodFornecChange(Sender: TObject);
 begin
   if edtCodFornec.Text <> '' then
   begin
     try
-      ADOQuery1.Close;
-      ADOQuery1.SQL.Clear;
-      ADOQuery1.SQL.Add('SELECT FORNECEDOR FROM AC_CADASTRO_FORNECEDORES WHERE CODFORNEC = :codigobuscar');
-      ADOQuery1.Parameters.ParamByName('codigobuscar').Value := edtCodFORNEC.Text;
-      ADOQuery1.Open;
+      FDQuery1.Close;
+      FDQuery1.SQL.Clear;
+      FDQuery1.SQL.Add('SELECT FORNECEDOR FROM AC_CADASTRO_FORNECEDORES WHERE CODFORNEC = :codigobuscar');
+      FDQuery1.Params.ParamByName('codigobuscar').Value := edtCodFornec.Text;
+      FDQuery1.Open;
 
-      if not ADOQuery1.Fields[0].IsNull then
-        edtNomeFornec.Text := ADOQuery1.Fields[0].AsString
+      if not FDQuery1.Fields[0].IsNull then
+        edtNomeFornec.Text := FDQuery1.Fields[0].AsString
       else
         edtNomeFornec.Clear;
-
     finally
-      ADOQuery1.Close;
+      FDQuery1.Close;
     end;
   end
   else
-    edtNomeFornec.Clear; // se apagar o código, limpa também o nome
+    edtNomeFornec.Clear;
 end;
+
 
 procedure TForm1.edtCodmunicipioChange(Sender: TObject);
-
 var
-qryCodMunicipio: TADOQuery;
-cidade: String;
+  qryCodMunicipio: TFDQuery;
+  cidade: String;
 begin
-qryCodMunicipio := TADOQuery.Create(nil);
-qryCodMunicipio.Connection := ADOConnection1;
+  qryCodMunicipio := TFDQuery.Create(nil);
+  try
+    qryCodMunicipio.Connection := FDConnection1;
 
-qryCodMunicipio.Close;
-qryCodMunicipio.SQL.Clear;
-qryCodMunicipio.SQL.Text:= ('SELECT * FROM AC_CADASTRO_CIDADES WHERE CIDADE = :cidade');
-qryCodMunicipio.Parameters.ParamByName('cidade').Value := edtCidade.Text;
-qryCodMunicipio.Open;
+    qryCodMunicipio.Close;
+    qryCodMunicipio.SQL.Clear;
+    qryCodMunicipio.SQL.Text := 'SELECT * FROM AC_CADASTRO_CIDADES WHERE CIDADE = :cidade';
+    qryCodMunicipio.Params.ParamByName('cidade').Value := edtCidade.Text;
+    qryCodMunicipio.Open;
 
-edtCodMunicipio.Text:=  qryCodMunicipio.FieldByName('CODMUNICIPIO').AsString;
+    edtCodMunicipio.Text := qryCodMunicipio.FieldByName('CODMUNICIPIO').AsString;
+    SelecionarItemCombo(cbUf, qryCodMunicipio.FieldByName('CODUF').AsString);
 
-SelecionarItemCombo(cbUf, qryCodMunicipio.FieldByName('CODUF').AsString);
-
-
-
+  finally
+    qryCodMunicipio.Free;
+  end;
 end;
 
+
 // Função responsável por inserir uma nova empresa no banco
+// InsertEmpresa
 procedure TForm1.InsertEmpresa(Lista: TStringList; Tabela: String);
 var
-  qryEmpresa,qryParam: TADOQuery;
-  CamposEmpresa, ValoresEmpresa,CamposParam,ValoresParam: string;
+  qryEmpresa, qryParam: TFDQuery;
+  CamposEmpresa, ValoresEmpresa, CamposParam, ValoresParam: string;
   i: Integer;
 begin
-  qryEmpresa := TADOQuery.Create(nil);
-  qryParam := TADOQuery.Create(nil);
+  qryEmpresa := TFDQuery.Create(nil);
+  qryParam := TFDQuery.Create(nil);
   try
-    qryEmpresa.Connection := ADOConnection1;
-    qryParam.Connection := ADOConnection1;
+    qryEmpresa.Connection := FDConnection1;
+    qryParam.Connection := FDConnection1;
 
     if Tabela = 'EMPRESA' then
-      begin
-         CamposEmpresa := '';
-         ValoresEmpresa := '';
-
-      // Percorre a lista "CAMPO=VALOR" e monta duas strings:
-      // uma só com os nomes dos campos e outra só com os valores
+    begin
+      CamposEmpresa := '';
+      ValoresEmpresa := '';
       for i := 0 to Lista.Count - 1 do
-        begin
+      begin
         CamposEmpresa := CamposEmpresa + Lista.Names[i] + ', ';
         ValoresEmpresa := ValoresEmpresa + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
-        end;
+      end;
+      Delete(CamposEmpresa, Length(CamposEmpresa)-1, 2);
+      Delete(ValoresEmpresa, Length(ValoresEmpresa)-1, 2);
 
-         // Remove a vírgula extra do final
-        Delete(CamposEmpresa, Length(CamposEmpresa)-1, 2);
-        Delete(ValoresEmpresa, Length(ValoresEmpresa)-1, 2);
+      qryEmpresa.SQL.Text := 'INSERT INTO AC_CADASTRO_EMPRESA (' + CamposEmpresa + ') ' +
+                             'VALUES (' + ValoresEmpresa + ')';
+      qryEmpresa.ExecSQL;
+      ShowMessage('Registro de empresa inserido com sucesso!');
+    end
+    else if Tabela = 'PARAMETRIZACAO' then
+    begin
+      CamposParam := '';
+      ValoresParam := '';
+      for i := 0 to Lista.Count - 1 do
+      begin
+        CamposParam := CamposParam + Lista.Names[i] + ', ';
+        ValoresParam := ValoresParam + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
+      end;
+      Delete(CamposParam, Length(CamposParam)-1, 2);
+      Delete(ValoresParam, Length(ValoresParam)-1, 2);
 
-        // Monta o SQL de insert
-        qryEmpresa.SQL.Text :=
-          'INSERT INTO AC_CADASTRO_EMPRESA (' + CamposEmpresa + ') ' +
-          'VALUES (' + ValoresEmpresa + ')';
-
-
-
-        qryEmpresa.ExecSQL; // Executa o comando
-
-        ShowMessage('Registro de empresa inserido com sucesso!');
-      end
-      else if Tabela = 'PARAMETRIZACAO' then
-        begin
-         CamposParam := '';
-         ValoresParam := '';
-
-          // Percorre a lista "CAMPO=VALOR" e monta duas strings:
-          // uma só com os nomes dos campos e outra só com os valores
-          for i := 0 to Lista.Count - 1 do
-            begin
-              CamposParam := CamposParam + Lista.Names[i] + ', ';
-              ValoresParam := ValoresParam + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
-            end;
-
-           // Remove a vírgula extra do final
-          Delete(CamposParam, Length(CamposParam)-1, 2);
-          Delete(ValoresParam, Length(ValoresParam)-1, 2);
-
-          // Monta o SQL de insert
-          qryParam.SQL.Text :=
-            'INSERT INTO AC_CADASTRO_PARAMETRIZACAO (' + CamposParam + ') ' +
-            'VALUES (' + ValoresParam + ')';
-
-          qryParam.ExecSQL; // Executa o comando
-
-          ShowMessage('Registro de parametrizações inserido com sucesso!');
-        end;
+      qryParam.SQL.Text := 'INSERT INTO AC_CADASTRO_PARAMETRIZACAO (' + CamposParam + ') ' +
+                           'VALUES (' + ValoresParam + ')';
+      qryParam.ExecSQL;
+      ShowMessage('Registro de parametrizações inserido com sucesso!');
+    end;
   finally
     qryEmpresa.Free;
     qryParam.Free;
-  end
-
-
+  end;
 end;
 
 
-// Função responsável por atualizar os dados de uma empresa já existente
+// UpdateEmpresa
 procedure TForm1.UpdateEmpresa(Lista: TStringList; Tabela: String);
 var
-  qryEmpresa,qryParam: TADOQuery;
+  qryEmpresa, qryParam: TFDQuery;
   Sets: string;
   i: Integer;
 begin
-  qryEmpresa := TADOQuery.Create(nil);
-  qryParam := TADOQuery.Create(nil);
+  qryEmpresa := TFDQuery.Create(nil);
+  qryParam := TFDQuery.Create(nil);
+  try
+    qryEmpresa.Connection := FDConnection1;
+    qryParam.Connection := FDConnection1;
 
-  qryEmpresa.Connection := ADOConnection1;
-  qryParam.Connection := ADOConnection1;
-
-  if Tabela = 'EMPRESA' then
-  begin
-     try
-
-    Sets := '';
-    // Percorre a lista e cria os pares "CAMPO = VALOR"
-    for i := 0 to Lista.Count - 1 do
+    if Tabela = 'EMPRESA' then
     begin
-      // Evita atualizar a chave primária (CODFILIAL)
-      if UpperCase(Lista.Names[i]) <> 'CODFILIAL' then
-        Sets := Sets + Lista.Names[i] + ' = ' + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
+      Sets := '';
+      for i := 0 to Lista.Count - 1 do
+      begin
+        if UpperCase(Lista.Names[i]) <> 'CODFILIAL' then
+          Sets := Sets + Lista.Names[i] + ' = ' + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
+      end;
+      Delete(Sets, Length(Sets)-1, 2);
+      qryEmpresa.SQL.Text := 'UPDATE AC_CADASTRO_EMPRESA SET ' + Sets +
+                             ' WHERE CODFILIAL = ' + QuotedStr(edtCodigo.Text);
+      qryEmpresa.ExecSQL;
+      ShowMessage('Registro atualizado com sucesso!');
+    end
+    else if Tabela = 'PARAMETRIZACAO' then
+    begin
+      Sets := '';
+      for i := 0 to Lista.Count - 1 do
+      begin
+        if UpperCase(Lista.Names[i]) <> 'CODFILIAL' then
+          Sets := Sets + Lista.Names[i] + ' = ' + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
+      end;
+      Delete(Sets, Length(Sets)-1, 2);
+      qryParam.SQL.Text := 'UPDATE AC_CADASTRO_PARAMETRIZACAO SET ' + Sets +
+                           ' WHERE CODFILIAL = ' + QuotedStr(edtCodigo.Text);
+      qryParam.ExecSQL;
+      ShowMessage('Registro atualizado com sucesso!');
     end;
-
-    // Remove a vírgula extra
-    Delete(Sets, Length(Sets)-1, 2);
-
-    // Monta o SQL de update
-    qryEmpresa.SQL.Text :=
-      'UPDATE AC_CADASTRO_EMPRESA SET ' + Sets +
-      ' WHERE CODFILIAL = ' + QuotedStr(edtCodigo.Text);
-
-    qryEmpresa.ExecSQL;
-
-    ShowMessage('Registro atualizado com sucesso!');
   finally
     qryEmpresa.Free;
+    qryParam.Free;
   end;
-  end
-  else if Tabela = 'PARAMETRIZACAO' then
-       begin
-          try
-
-            Sets := '';
-            // Percorre a lista e cria os pares "CAMPO = VALOR"
-            for i := 0 to Lista.Count - 1 do
-            begin
-              // Evita atualizar a chave primária (CODFILIAL)
-              if UpperCase(Lista.Names[i]) <> 'CODFILIAL' then
-                Sets := Sets + Lista.Names[i] + ' = ' + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
-            end;
-
-            // Remove a vírgula extra
-            Delete(Sets, Length(Sets)-1, 2);
-
-            // Monta o SQL de update
-            qryParam.SQL.Text :=
-              'UPDATE AC_CADASTRO_PARAMETRIZACAO SET ' + Sets +
-              ' WHERE CODFILIAL = ' + QuotedStr(edtCodigo.Text);
-
-            qryParam.ExecSQL;
-
-            ShowMessage('Registro atualizado com sucesso!');
-          finally
-            qryParam.Free;
-          end;
-       end;
-
-
-
 end;
+
 
 procedure TForm1.SelecionarItemCombo(Combo: TComboBox; Valor: String);
 begin

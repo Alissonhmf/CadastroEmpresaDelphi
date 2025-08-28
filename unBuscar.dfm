@@ -1,23 +1,28 @@
 object Form2: TForm2
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = '\'
-  ClientHeight = 316
-  ClientWidth = 690
+  ClientHeight = 385
+  ClientWidth = 707
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  Position = poScreenCenter
   TextHeight = 15
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 690
+    Width = 707
     Height = 73
     Align = alTop
     TabOrder = 0
+    ExplicitTop = -6
+    ExplicitWidth = 690
     object btnAbrir: TButton
       Left = 16
       Top = 15
@@ -52,8 +57,8 @@ object Form2: TForm2
   object DBGrid1: TDBGrid
     Left = 0
     Top = 73
-    Width = 690
-    Height = 243
+    Width = 707
+    Height = 312
     Align = alClient
     DataSource = DataSource1
     TabOrder = 1
@@ -64,28 +69,27 @@ object Form2: TForm2
     TitleFont.Style = []
     OnDblClick = DBGrid1DblClick
   end
-  object ADOQuery1: TADOQuery
-    Active = True
-    Connection = ADOConnection1
-    CursorType = ctStatic
-    Parameters = <>
-    SQL.Strings = (
-      'SELECT *  FROM AC_CADASTRO_EMPRESA ORDER BY CODFILIAL')
-    Left = 208
-    Top = 24
-  end
-  object ADOConnection1: TADOConnection
-    Connected = True
-    ConnectionString = 
-      'Provider=MSDASQL.1;Password=acont3c;Persist Security Info=True;U' +
-      'ser ID=Acontec;Data Source=OracleMeuBanco'
-    LoginPrompt = False
-    Left = 456
-    Top = 24
-  end
   object DataSource1: TDataSource
-    DataSet = ADOQuery1
+    DataSet = FDQuery1
     Left = 272
     Top = 32
+  end
+  object FDQuery1: TFDQuery
+    Active = True
+    Connection = FDConnection1
+    SQL.Strings = (
+      'SELECT * FROM AC_CADASTRO_EMPRESA order by codfilial  ')
+    Left = 352
+    Top = 24
+  end
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'User_Name=Acontec'
+      'Password=acont3c'
+      'Database=ORCL'
+      'DriverID=Ora')
+    Connected = True
+    LoginPrompt = False
+    Left = 432
   end
 end

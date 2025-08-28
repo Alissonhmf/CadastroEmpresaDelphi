@@ -5,7 +5,12 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.StdCtrls, Vcl.Grids,
-  Vcl.DBGrids, Vcl.ExtCtrls, Data.Win.ADODB;
+  Vcl.DBGrids, Vcl.ExtCtrls, Data.Win.ADODB, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, FireDAC.UI.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Phys, FireDAC.Phys.Oracle, FireDAC.Phys.OracleDef,
+  FireDAC.VCLUI.Wait;
 
 type
   TForm2 = class(TForm)
@@ -13,9 +18,9 @@ type
     DBGrid1: TDBGrid;
     btnAbrir: TButton;
     Button1: TButton;
-    ADOQuery1: TADOQuery;
-    ADOConnection1: TADOConnection;
     DataSource1: TDataSource;
+    FDQuery1: TFDQuery;
+    FDConnection1: TFDConnection;
     procedure Button1Click(Sender: TObject);
     procedure DBGrid1DblClick(Sender: TObject);
   private

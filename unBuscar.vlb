@@ -5,12 +5,9 @@ Coordinates=210,10,125,58
 Coordinates=380,60,89,58
 Visible=True
 
-[ADOQuery1]
-Coordinates=10,78,84,58
-
 [DBGrid1]
 Coordinates=104,78,64,36
 
 []
-Coordinates=80,10,120,58
+Coordinates=10,78,84,58
 

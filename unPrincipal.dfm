@@ -1,8 +1,10 @@
 object Form1: TForm1
   Left = 0
   Top = 0
+  BorderIcons = [biSystemMenu, biMinimize]
+  BorderStyle = bsSingle
   Caption = 'Form1'
-  ClientHeight = 385
+  ClientHeight = 387
   ClientWidth = 707
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -10,6 +12,7 @@ object Form1: TForm1
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  Position = poScreenCenter
   OnCreate = FormCreate
   TextHeight = 15
   object Pn1: TPanel
@@ -118,7 +121,7 @@ object Form1: TForm1
     Left = 1
     Top = 58
     Width = 705
-    Height = 326
+    Height = 328
     Margins.Left = 1
     Margins.Top = 1
     Margins.Right = 1
@@ -435,7 +438,7 @@ object Form1: TForm1
       object pn2: TPanel
         AlignWithMargins = True
         Left = 3
-        Top = 152
+        Top = 154
         Width = 691
         Height = 138
         Align = alBottom
@@ -767,7 +770,7 @@ object Form1: TForm1
       object pn3: TPanel
         AlignWithMargins = True
         Left = 3
-        Top = 114
+        Top = 116
         Width = 691
         Height = 179
         Align = alBottom
@@ -1161,7 +1164,7 @@ object Form1: TForm1
       object pn4: TPanel
         AlignWithMargins = True
         Left = 3
-        Top = 156
+        Top = 158
         Width = 691
         Height = 137
         Align = alBottom
@@ -1468,18 +1471,17 @@ object Form1: TForm1
       end
     end
   end
-  object ADOConnection1: TADOConnection
-    ConnectionString = 
-      'Provider=MSDASQL.1;Password=acont3c;Persist Security Info=True;U' +
-      'ser ID=Acontec;Data Source=OracleMeuBanco'
+  object FDConnection1: TFDConnection
+    Params.Strings = (
+      'User_Name=Acontec'
+      'Password=acont3c'
+      'Database=ORCL'
+      'DriverID=Ora')
     LoginPrompt = False
-    Provider = 'MSDASQL.1'
-    Left = 568
+    Left = 432
   end
-  object ADOQuery1: TADOQuery
-    Connection = ADOConnection1
-    Parameters = <>
-    Left = 568
-    Top = 65528
+  object FDQuery1: TFDQuery
+    Connection = FDConnection1
+    Left = 432
   end
 end
