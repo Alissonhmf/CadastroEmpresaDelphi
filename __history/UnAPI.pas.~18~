@@ -1,0 +1,169 @@
+unit UnAPI;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,  REST.Types, REST.Client,
+  Data.Bind.Components, Data.Bind.ObjectScope, System.JSON;
+
+type
+  TForm3 = class(TForm)
+    pn1_api: TPanel;
+    Button1: TButton;
+    pn2Api: TPanel;
+    ed_consultaCnpj: TEdit;
+    bt_consultar: TButton;
+    RESTClient1: TRESTClient;
+    RESTRequest1: TRESTRequest;
+    RESTResponse1: TRESTResponse;
+    function  GetCNPJJSON(const ACNPJ: string): string;
+    procedure PreencherCampos(const JSONText: string);
+    procedure bt_consultarClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure edtCNPJChange(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form3: TForm3;
+
+implementation
+
+uses
+unPrincipal;
+
+{$R *.dfm}
+
+
+
+{ Função para buscar o JSON da API }
+procedure TForm3.bt_consultarClick(Sender: TObject);
+begin
+var
+  JSONText: string;
+begin
+  JSONText := GetCNPJJSON(ed_consultaCnpj.Text);
+  PreencherCampos(JSONText);
+  close;
+end;
+end;
+
+procedure TForm3.Button1Click(Sender: TObject);
+begin
+  CLOSE;
+end;
+
+function TForm3.GetCNPJJSON(const ACNPJ: string): string;
+begin
+  RESTClient1.BaseURL := 'https://www.receitaws.com.br/v1/cnpj/';
+  RESTRequest1.Resource := ACNPJ;
+  RESTRequest1.Method := rmGET;
+  RESTRequest1.Execute;
+  Result := RESTRequest1.Response.JSONText;
+end;
+
+{ Função para preencher os campos do formulário a partir do JSON }
+procedure TForm3.PreencherCampos(const JSONText: string);
+var
+  JSONVal: TJSONValue;
+  JSONObj: TJSONObject;
+  AtivArray, AtivSecArray: TJSONArray;
+  i: Integer;
+
+  function GetField(const FieldName: string): string;
+  var
+    V: TJSONValue;
+  begin
+    V := JSONObj.GetValue(FieldName);
+    if Assigned(V) then
+      Result := V.Value
+    else
+      Result := '';
+  end;
+
+begin
+  JSONVal := TJSONObject.ParseJSONValue(JSONText);
+  if JSONVal = nil then Exit;
+
+  try
+    if JSONVal is TJSONObject then
+    begin
+      JSONObj := TJSONObject(JSONVal);
+
+      // Campos simples
+      Form1.edtRazaoSocial.Text := GetField('nome');
+      Form1.edtFantasia.Text := GetField('fantasia');
+      Form1.edtEndereco.Text := GetField('logradouro');
+      //Edit5.Text := GetField('numero');
+      Form1.edtCidade.Text := GetField('municipio');
+      Form1.edtBairro.Text := GetField('bairro');
+      //.Text := GetField('uf');
+      Form1.edtCep.Text := GetField('cep');
+      Form1.edtTelefone.Text := GetField('telefone');
+      Form1.edtEmail.Text := GetField('email');
+      //.Text := GetField('situacao');
+      //Edit13.Text := GetField('tipo');
+      //Edit18.Text := GetField('capital_social');
+
+      // Array: atividade_principal
+      AtivArray := JSONObj.GetValue('atividade_principal') as TJSONArray;
+      //if Assigned(AtivArray) and (AtivArray.Count > 0) then
+        //Edit14.Text := AtivArray.Items[0].GetValue<string>('text')
+      //else
+        //Edit14.Text := '';
+
+      // Array: atividades_secundarias
+      AtivSecArray := JSONObj.GetValue('atividades_secundarias') as TJSONArray;
+      //Edit15.Clear;
+      //if Assigned(AtivSecArray) then
+        //for i := 0 to AtivSecArray.Count - 1 do
+          //Edit15.Lines.Add(AtivSecArray.Items[i].GetValue<string>('text'));
+
+      // Objetos aninhados
+      //if JSONObj.GetValue('simples') is TJSONObject then
+        //Edit16.Text := (JSONObj.GetValue('simples') as TJSONObject).GetValue('optante').Value
+      //else
+        //Edit16.Text := '';
+
+      //if JSONObj.GetValue('simei') is TJSONObject then
+        //Edit17.Text := (JSONObj.GetValue('simei') as TJSONObject).GetValue('optante').Value
+      //else
+        //Edit17.Text := '';
+
+      // Última atualização
+      //Edit19.Text := GetField('ultima_atualizacao');
+    end;
+  finally
+    JSONVal.Free;
+  end;
+end;
+
+procedure TForm3.edtCNPJChange(Sender: TObject);
+var
+  s: string;
+  i: Integer;
+begin
+  s := '';
+  for i := 1 to Length(ed_consultaCnpj.Text) do
+    if CharInSet(ed_consultaCnpj.Text[i], ['0'..'9']) then
+      s := s + ed_consultaCnpj.Text[i];
+
+  // evita loop desnecessário
+  if ed_consultaCnpj.Text <> s then
+  begin
+    ed_consultaCnpj.Text := s;
+    ed_consultaCnpj.SelStart := Length(s); // mantém o cursor no fim
+  end;
+end;
+
+
+
+
+
+
+
+end.

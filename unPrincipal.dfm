@@ -299,6 +299,7 @@ object Form1: TForm1
           Font.Height = -12
           Font.Name = 'Segoe UI'
           Font.Style = []
+          MaxLength = 40
           ParentFont = False
           TabOrder = 1
         end
@@ -327,6 +328,7 @@ object Form1: TForm1
           Font.Height = -12
           Font.Name = 'Segoe UI'
           Font.Style = []
+          MaxLength = 18
           ParentFont = False
           TabOrder = 2
         end
@@ -341,6 +343,7 @@ object Form1: TForm1
           Font.Height = -12
           Font.Name = 'Segoe UI'
           Font.Style = []
+          MaxLength = 15
           ParentFont = False
           TabOrder = 4
         end
@@ -349,7 +352,6 @@ object Form1: TForm1
           Top = 123
           Width = 264
           Height = 23
-          CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clWindowText
           Font.Height = -12
@@ -369,6 +371,7 @@ object Form1: TForm1
           Font.Height = -12
           Font.Name = 'Segoe UI'
           Font.Style = []
+          MaxLength = 15
           ParentFont = False
           TabOrder = 7
         end
@@ -477,7 +480,7 @@ object Form1: TForm1
         end
         object lbBairro: TLabel
           Left = 276
-          Top = 32
+          Top = 80
           Width = 31
           Height = 13
           Caption = 'Bairro'
@@ -489,7 +492,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object lbCep: TLabel
-          Left = 276
+          Left = 597
           Top = 80
           Width = 19
           Height = 13
@@ -515,7 +518,7 @@ object Form1: TForm1
           ParentFont = False
         end
         object lbCidade: TLabel
-          Left = 450
+          Left = 276
           Top = 32
           Width = 36
           Height = 13
@@ -528,8 +531,8 @@ object Form1: TForm1
           ParentFont = False
         end
         object lbCodMunicipio: TLabel
-          Left = 624
-          Top = 80
+          Left = 597
+          Top = 32
           Width = 14
           Height = 13
           Caption = 'UF'
@@ -541,8 +544,8 @@ object Form1: TForm1
           ParentFont = False
         end
         object lbCodMunicipi: TLabel
-          Left = 450
-          Top = 80
+          Left = 441
+          Top = 34
           Width = 75
           Height = 13
           Caption = 'Cod munic'#237'pio'
@@ -564,13 +567,14 @@ object Form1: TForm1
           Font.Height = -12
           Font.Name = 'Segoe UI'
           Font.Style = []
+          MaxLength = 40
           ParentFont = False
           TabOrder = 0
         end
         object edtBairro: TEdit
           Left = 276
-          Top = 51
-          Width = 168
+          Top = 99
+          Width = 315
           Height = 23
           CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
@@ -578,13 +582,14 @@ object Form1: TForm1
           Font.Height = -12
           Font.Name = 'Segoe UI'
           Font.Style = []
+          MaxLength = 20
           ParentFont = False
           TabOrder = 1
         end
         object edtCep: TEdit
-          Left = 276
+          Left = 597
           Top = 99
-          Width = 168
+          Width = 84
           Height = 23
           CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
@@ -592,6 +597,7 @@ object Form1: TForm1
           Font.Height = -12
           Font.Name = 'Segoe UI'
           Font.Style = []
+          MaxLength = 10
           ParentFont = False
           TabOrder = 4
         end
@@ -610,9 +616,9 @@ object Form1: TForm1
           TabOrder = 3
         end
         object edtCidade: TEdit
-          Left = 450
+          Left = 276
           Top = 51
-          Width = 231
+          Width = 159
           Height = 23
           CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
@@ -620,14 +626,15 @@ object Form1: TForm1
           Font.Height = -12
           Font.Name = 'Segoe UI'
           Font.Style = []
+          MaxLength = 20
           ParentFont = False
           TabOrder = 2
           OnChange = edtCodmunicipioChange
         end
         object edtCodmunicipio: TEdit
-          Left = 450
-          Top = 99
-          Width = 168
+          Left = 441
+          Top = 53
+          Width = 150
           Height = 23
           CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
@@ -641,9 +648,9 @@ object Form1: TForm1
           OnChange = edtCodmunicipioChange
         end
         object cbUf: TComboBox
-          Left = 624
-          Top = 99
-          Width = 57
+          Left = 597
+          Top = 51
+          Width = 84
           Height = 22
           Style = csDropDownList
           TabOrder = 6
@@ -736,6 +743,7 @@ object Form1: TForm1
         Font.Height = -12
         Font.Name = 'Segoe UI'
         Font.Style = []
+        MaxLength = 40
         ParentFont = False
         TabOrder = 0
       end
@@ -750,6 +758,7 @@ object Form1: TForm1
         Font.Height = -12
         Font.Name = 'Segoe UI'
         Font.Style = []
+        MaxLength = 20
         ParentFont = False
         TabOrder = 2
       end
@@ -764,6 +773,7 @@ object Form1: TForm1
         Font.Height = -12
         Font.Name = 'Segoe UI'
         Font.Style = []
+        MaxLength = 11
         ParentFont = False
         TabOrder = 1
       end
@@ -923,7 +933,6 @@ object Form1: TForm1
         Top = 75
         Width = 337
         Height = 23
-        CharCase = ecUpperCase
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
@@ -1139,12 +1148,14 @@ object Form1: TForm1
         Top = 35
         Width = 25
         Height = 23
+        Enabled = False
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -12
         Font.Name = 'Segoe UI'
         Font.Style = []
         ParentFont = False
+        ReadOnly = True
         TabOrder = 2
       end
       object edtPerProtege: TEdit

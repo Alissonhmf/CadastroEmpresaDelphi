@@ -136,6 +136,10 @@
             <Form>Form2</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="UnAPI.pas">
+            <Form>Form3</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>
@@ -165,6 +169,12 @@
             </Delphi.Personality>
             <Deployment Version="4">
                 <DeployFile LocalName="Win32\Debug\Projeto_cadEmpresa.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>Projeto_cadEmpresa.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win32\Release\Projeto_cadEmpresa.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Projeto_cadEmpresa.exe</RemoteName>
                         <Overwrite>true</Overwrite>

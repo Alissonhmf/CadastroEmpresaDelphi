@@ -146,6 +146,7 @@ type
     procedure SelecionarItemCombo(Combo: TComboBox; Valor: String);
     procedure edtCodmunicipioChange(Sender: TObject);
     procedure SomenteNumeros(Sender: TObject; var Key: Char);
+    procedure CarregarParametrizacao;
   private
     { Private declarations }
   public
@@ -158,10 +159,14 @@ var
 
 implementation
 
+uses
+unApi;
+
 {$R *.dfm}
 
 
 //Versao 1 25/08/2025
+//Versao 2 29/08/2025
 
 procedure TForm1.btnBuscarClick(Sender: TObject);
 var
@@ -349,25 +354,21 @@ begin
   if edtNomeCli.Text = '' then
   begin
     showMessage('Nome do Cliente Inválido. Confira o Código');
-    exit;
   end;
 
   if edtNomeFornec.Text = '' then
   begin
     showMessage('Nome do Fornecedor Inválido. Confira o Código');
-    exit;
   end;
 
    if edtRazaoSocial.Text = '' then
   begin
     showMessage('Preencha a Razão social');
-    exit;
   end;
 
   if edtCodMunicipio.Text = '' then
   begin
     showMessage('Código de Município inválido. Confira a cidade');
-    exit;
   end;
 
 
@@ -419,18 +420,30 @@ begin
  tsContador.Enabled:= True;
  tsFiscal.Enabled:= True;
 
- edtCodigo.Text:= ('0'+InttoStr(ProxCodEmpresa));
+   // Cria, mostra modal e destrói ao fechar
+  with TForm3.Create(Self) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
 
- quemChamou:= 'Novo';
-
- cbUsaCredIcms.ItemIndex := 0;
  cbEnviarApp.ItemIndex := 0;
  cbTransportadora.ItemIndex := 1;
  cbBloqNfNContribEstadual.ItemIndex := 1;
  cbBloqNfNContribInter.ItemIndex := 1;
  cbBloqNfPfEstadual.ItemIndex := 1;
  cbBloqNfPfInter.ItemIndex := 1;
- cbUsaCredPisCofins.ItemIndex := 0;
+
+
+ edtCodigo.Text:= ('0'+InttoStr(ProxCodEmpresa));
+ edtSerie.Text:= '1';
+ CarregarParametrizacao;
+
+ quemChamou:= 'Novo';
+
+
+
 
 
 end;
@@ -823,6 +836,37 @@ begin
     Key := #0;
 end;
 
+procedure TForm1.CarregarParametrizacao;
+var
+  qryParam: TFDQuery;
+begin
+  qryParam := TFDQuery.Create(nil);
+   try
+    qryParam.Connection := FDConnection1;
+    qryParam.SQL.Clear;
+    qryParam.SQL.Text :=
+      'SELECT * FROM AC_CADASTRO_PARAMETRIZACAO';
+    qryParam.Open;
+
+   if qryParam.IsEmpty then
+    begin
+      ShowMessage('Falha ao abrir cadastro de parametrização!');
+      Exit;
+    end;
+
+
+    // -------- Parametrizações / cadastro --------
+    edtDirTelas.Text        := qryParam.FieldByName('DIRETORIO_TELAS').AsString;
+    edtProxCodCli.Text      := qryParam.FieldByName('PROXCODCLI').AsString;
+    edtProxCodFornec.Text   := qryParam.FieldByName('PROXCODFORNEC').AsString;
+    edtProxCodProd.Text     := qryParam.FieldByName('PROXCODPROD').AsString;
+    cbUsaCredIcms.Text      := qryParam.FieldByName('USACREDICM').AsString;
+    cbUsaCredPisCofins.Text      := qryParam.FieldByName('USACREDPISCOFINS').AsString;
+
+  finally
+    qryParam.Free;
+  end;
+end;
 
 
 end.

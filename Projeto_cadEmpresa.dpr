@@ -5,7 +5,8 @@ uses
   unPrincipal in 'unPrincipal.pas' {Form1},
   Vcl.Themes,
   Vcl.Styles,
-  unBuscar in 'unBuscar.pas' {Form2};
+  unBuscar in 'unBuscar.pas' {Form2},
+  UnAPI in 'UnAPI.pas' {Form3};
 
 {$R *.res}
 
@@ -14,6 +15,5 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Aqua Light Slate');
   Application.CreateForm(TForm1, Form1);
-  Application.CreateForm(TForm2, Form2);
   Application.Run;
 end.
