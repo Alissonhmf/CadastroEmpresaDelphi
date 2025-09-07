@@ -3,7 +3,6 @@ object Form2: TForm2
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = '\'
   ClientHeight = 385
   ClientWidth = 707
   Color = clBtnFace
@@ -21,8 +20,6 @@ object Form2: TForm2
     Height = 73
     Align = alTop
     TabOrder = 0
-    ExplicitTop = -6
-    ExplicitWidth = 690
     object btnAbrir: TButton
       Left = 16
       Top = 15

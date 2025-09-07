@@ -1,0 +1,907 @@
+﻿unit unPrincipal;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ComCtrls,
+  Data.DB, Data.Win.ADODB, unBuscar,  FireDAC.Comp.Client, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Phys.Oracle,
+  FireDAC.Phys.OracleDef, FireDAC.VCLUI.Wait, FireDAC.Comp.DataSet;
+
+type
+  TForm1 = class(TForm)
+    Pn1: TPanel;
+    btnGravar: TButton;
+    btnNovo: TButton;
+    btnEditar: TButton;
+    btnSair: TButton;
+    pgCadastro: TPageControl;
+    btnBuscar: TButton;
+    btnCancelar: TButton;
+    tsCadastro: TTabSheet;
+    tsContador: TTabSheet;
+    tsFiscal: TTabSheet;
+    pnEmpresa: TPanel;
+    lbCodigo: TLabel;
+    edtCodigo: TEdit;
+    lbRazaoSocial: TLabel;
+    edtRazaoSocial: TEdit;
+    lbFantasia: TLabel;
+    edtFantasia: TEdit;
+    edtCnpj: TEdit;
+    lbCnpj: TLabel;
+    edtIe: TEdit;
+    lbInscricao: TLabel;
+    lbEmail: TLabel;
+    edtEmail: TEdit;
+    edtTelefone: TEdit;
+    lbTelefone: TLabel;
+    edtCodCli: TEdit;
+    lbCodCli: TLabel;
+    edtCodFornec: TEdit;
+    lbCodFornec: TLabel;
+    edtNomeCli: TEdit;
+    edtNomeFornec: TEdit;
+    pn2: TPanel;
+    lbEnderecoEmpresa: TLabel;
+    edtEndereco: TEdit;
+    lbEndereco: TLabel;
+    lbBairro: TLabel;
+    edtBairro: TEdit;
+    lbCep: TLabel;
+    edtCep: TEdit;
+    edtComplemento: TEdit;
+    lbComplemento: TLabel;
+    edtCidade: TEdit;
+    edtCodmunicipio: TEdit;
+    lbCidade: TLabel;
+    lbCodMunicipio: TLabel;
+    lbCodMunicipi: TLabel;
+    cbUf: TComboBox;
+    lbNomeContador: TLabel;
+    edtNomeContador: TEdit;
+    lbCpfCnpjContador: TLabel;
+    edtCpfCnpjContador: TEdit;
+    lbCrcContador: TLabel;
+    edtCrcContador: TEdit;
+    pn3: TPanel;
+    lbEnderecoContador: TLabel;
+    Label3: TLabel;
+    Label4: TLabel;
+    Label5: TLabel;
+    Label6: TLabel;
+    Label8: TLabel;
+    edtEnderecoContador: TEdit;
+    edtBairroContador: TEdit;
+    edtCepContador: TEdit;
+    edtComplementoContador: TEdit;
+    cbUfContador: TComboBox;
+    lbEmailContador: TLabel;
+    edtEmailContador: TEdit;
+    edtTelefoneContador: TEdit;
+    lbTelefoneContador: TLabel;
+    edtProxNumNfe: TEdit;
+    lbProxNumNota: TLabel;
+    edtSerie: TEdit;
+    edtPerProtege: TEdit;
+    lbPerProtege: TLabel;
+    lbSerie: TLabel;
+    pn4: TPanel;
+    lbDirTelas: TLabel;
+    edtDirTelas: TEdit;
+    lbTipoTribut: TLabel;
+    cbTipoTribut: TComboBox;
+    lbProxNumNfce: TLabel;
+    edtProxNumNfce: TEdit;
+    lbProxNumCte: TLabel;
+    edtProxNumCte: TEdit;
+    edtProxNumMdfe: TEdit;
+    lbProxNumMdfe: TLabel;
+    lbDirNfe: TLabel;
+    edtDirNfe: TEdit;
+    edtDirMdfe: TEdit;
+    lbDirMdfe: TLabel;
+    lbEnviaApp: TLabel;
+    cbEnviarApp: TComboBox;
+    cbTransportadora: TComboBox;
+    lbTrasnportador: TLabel;
+    lbUsaCredIcms: TLabel;
+    cbUsaCredPisCofins: TComboBox;
+    lbUsaCredPisCofins: TLabel;
+    cbUsaCredIcms: TComboBox;
+    lbProxCodCli: TLabel;
+    edtProxCodCli: TEdit;
+    edtProxCodFornec: TEdit;
+    lbProxCodFornec: TLabel;
+    edtProxCodProd: TEdit;
+    lbProxCodProd: TLabel;
+    cbBloqNfNContribEstadual: TComboBox;
+    cbBloqNfNContribInter: TComboBox;
+    lbBloqNfNContribInter: TLabel;
+    lbBloqNfNContribEstadual: TLabel;
+    cbBloqNfPfEstadual: TComboBox;
+    lbBloqNfPfEstadual: TLabel;
+    lbBloqNfPfInter: TLabel;
+    cbBloqNfPfInter: TComboBox;
+    FDConnection1: TFDConnection;
+    FDQuery1: TFDQuery;
+    bt_consultar: TButton;
+    procedure btnSairClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure btnNovoClick(Sender: TObject);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure btnGravarClick(Sender: TObject);
+    procedure LimparCampos;
+    function ProxCodEmpresa: Integer;
+    function MontaCamposValores(Tabela: String): TStringList;
+    procedure edtCodCliChange(Sender: TObject);
+    procedure edtCodFornecChange(Sender: TObject);
+    procedure btnBuscarClick(Sender: TObject);
+    procedure CarregarEmpresa(Codigo: Integer);
+    procedure btnEditarClick(Sender: TObject);
+    procedure InsertEmpresa(Lista: TStringList; Tabela: String);
+    procedure UpdateEmpresa(Lista: TStringList; Tabela: String);
+    procedure SelecionarItemCombo(Combo: TComboBox; Valor: String);
+    procedure edtCodmunicipioChange(Sender: TObject);
+    procedure SomenteNumeros(Sender: TObject; var Key: Char);
+    procedure CarregarParametrizacao;
+    procedure bt_consultarClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1;
+  quemChamou: String;
+
+implementation
+
+uses
+unApi;
+
+{$R *.dfm}
+
+
+//Versao 1 25/08/2025
+//Versao 2 29/08/2025
+//Versao 3 30/08/2025 API para consultar CNPJ
+
+procedure TForm1.btnBuscarClick(Sender: TObject);
+var
+  Codigo: Integer;
+begin
+  with TForm2.Create(Self) do
+  try
+    Codigo := SelecionarEmpresa;
+  finally
+    Free;
+  end;
+
+  if Codigo > 0 then
+    begin
+    CarregarEmpresa(Codigo);
+    btnEditar.Enabled:= True;
+    end;
+
+
+
+
+end;
+
+procedure TForm1.CarregarEmpresa(Codigo: Integer);
+var
+  qryEmpresa,qryParam: TFDQuery;
+begin
+  qryEmpresa := TFDQuery.Create(nil);
+  try
+    qryEmpresa.Connection := FDConnection1;
+    qryEmpresa.SQL.Clear;
+    qryEmpresa.SQL.Text :=
+      'SELECT * FROM AC_CADASTRO_EMPRESA WHERE CODFILIAL = :CODFILIAL';
+    qryEmpresa.ParamByName('CODFILIAL').AsInteger := Codigo;
+    qryEmpresa.Open;
+
+    if qryEmpresa.IsEmpty then
+    begin
+      ShowMessage('Empresa não encontrada!');
+      Exit;
+    end;
+
+    // -------- Identificação / cadastro --------
+    edtCodigo.Text       := qryEmpresa.FieldByName('CODFILIAL').AsString;
+    edtRazaoSocial.Text  := qryEmpresa.FieldByName('FILIAL').AsString;
+    edtFantasia.Text     := qryEmpresa.FieldByName('NOMEFANTASIA').AsString;
+    edtCnpj.Text         := qryEmpresa.FieldByName('CPFCNPJ').AsString;
+    edtIe.Text           := qryEmpresa.FieldByName('IE').AsString;
+    edtEmail.Text        := qryEmpresa.FieldByName('EMAIL').AsString;
+    edtCodCli.Text       := qryEmpresa.FieldByName('CODCLI').AsString;
+    edtCodFornec.Text    := qryEmpresa.FieldByName('CODFORNEC').AsString;
+    edtTelefone.Text     := qryEmpresa.FieldByName('TELEFONE').AsString;
+
+    // -------- Endereço da empresa --------
+    edtEndereco.Text      := qryEmpresa.FieldByName('ENDERECO').AsString;
+    edtBairro.Text        := qryEmpresa.FieldByName('BAIRRO').AsString;
+    edtCidade.Text        := qryEmpresa.FieldByName('CIDADE').AsString;
+    edtCep.Text           := qryEmpresa.FieldByName('CEP').AsString;
+    edtComplemento.Text   := qryEmpresa.FieldByName('COMPLEMENTO').AsString;
+    edtCodMunicipio.Text  := qryEmpresa.FieldByName('CODMUNICIPIO').AsString;
+
+    SelecionarItemCombo(cbUf, qryEmpresa.FieldByName('UF').AsString);
+    SelecionarItemCombo(cbUfContador, qryEmpresa.FieldByName('CONTADORUF').AsString);
+
+
+    // -------- Numeração / configurações fiscais --------
+    edtProxNumNfe.Text    := qryEmpresa.FieldByName('PROXNUMNOTA').AsString;
+    edtSerie.Text         := qryEmpresa.FieldByName('SERIE').AsString;
+    edtProxNumNfce.Text   := qryEmpresa.FieldByName('PROXNUMNFCONSUMIDOR').AsString;
+    edtDirNfe.Text        := qryEmpresa.FieldByName('DIRNFE').AsString;
+    edtProxNumCte.Text    := qryEmpresa.FieldByName('PROXNUMCONHEC').AsString;
+    edtProxNumMdfe.Text   := qryEmpresa.FieldByName('PROXNUMMDFE').AsString;
+    edtDirMdfe.Text       := qryEmpresa.FieldByName('DIRMDFE').AsString;
+    cbTransportadora.Text := qryEmpresa.FieldByName('TRANSPORTADORA').AsString;
+    edtPerProtege.Text    := qryEmpresa.FieldByName('PER_PROTEGE').AsString;
+    cbEnviarapp.Text      := qryEmpresa.FieldByName('DISP_APP').AsString;
+    cbBloqNfNContribEstadual.Text  := qryEmpresa.FieldByName('BLOQ_NF_N_CONTRIB_ESTADUAL').AsString;
+    cbBloqNfNContribInter.Text     := qryEmpresa.FieldByName('BLOQ_NF_N_CONTRIB_INTEREST').AsString;
+    cbBloqNfPfEstadual.Text        := qryEmpresa.FieldByName('BLOQ_NF_PF_ESTADUAL').AsString;
+    cbBloqNfPfInter.Text           := qryEmpresa.FieldByName('BLOQ_NF_PF_INTEREST').AsString;
+
+    if qryEmpresa.FieldByName('TIPOTRIBUT').AsString = '1' then
+    begin
+      cbTipoTribut.ItemIndex:= 0;
+    end;
+
+    if qryEmpresa.FieldByName('TIPOTRIBUT').AsString = '2' then
+    begin
+      cbTipoTribut.ItemIndex:= 1;
+    end;
+
+     if qryEmpresa.FieldByName('TIPOTRIBUT').AsString = '3' then
+    begin
+      cbTipoTribut.ItemIndex:= 2;
+    end;
+
+    // -------- Dados do contador --------
+    edtNomeContador.Text       := qryEmpresa.FieldByName('CONTADORNOME').AsString;
+    edtCpfCnpjContador.Text    := qryEmpresa.FieldByName('CONTADORCPFCNPJ').AsString;
+    edtCrcContador.Text        := qryEmpresa.FieldByName('CONTADORCRC').AsString;
+    cbUfContador.Text          := qryEmpresa.FieldByName('CONTADORUF').AsString;
+    edtCepContador.Text        := qryEmpresa.FieldByName('CONTADORCEP').AsString;
+    edtEnderecoContador.Text   := qryEmpresa.FieldByName('CONTADORENDERECO').AsString;
+    edtComplementoContador.Text:= qryEmpresa.FieldByName('CONTADORCOMPLEMENTO').AsString;
+    edtBairroContador.Text     := qryEmpresa.FieldByName('CONTADORBAIRRO').AsString;
+    edtTelefoneContador.Text   := qryEmpresa.FieldByName('CONTADORTELEFONE').AsString;
+    edtEmailContador.Text      := qryEmpresa.FieldByName('CONTADOREMAIL').AsString;
+
+  finally
+    qryEmpresa.Free;
+  end;
+
+  qryParam := TFDQuery.Create(nil);
+   try
+    qryParam.Connection := FDConnection1;
+    qryParam.SQL.Clear;
+    qryParam.SQL.Text :=
+      'SELECT * FROM AC_CADASTRO_PARAMETRIZACAO';
+    qryParam.Open;
+
+   if qryParam.IsEmpty then
+    begin
+      ShowMessage('Falha ao abrir cadastro de parametrização!');
+      Exit;
+    end;
+
+
+    // -------- Parametrizações / cadastro --------
+    edtDirTelas.Text        := qryParam.FieldByName('DIRETORIO_TELAS').AsString;
+    edtProxCodCli.Text      := qryParam.FieldByName('PROXCODCLI').AsString;
+    edtProxCodFornec.Text   := qryParam.FieldByName('PROXCODFORNEC').AsString;
+    edtProxCodProd.Text     := qryParam.FieldByName('PROXCODPROD').AsString;
+    cbUsaCredIcms.Text      := qryParam.FieldByName('USACREDICM').AsString;
+    cbUsaCredPisCofins.Text      := qryParam.FieldByName('USACREDPISCOFINS').AsString;
+
+  finally
+    qryParam.Free;
+  end;
+end;
+
+
+
+
+procedure TForm1.btnCancelarClick(Sender: TObject);
+var
+I: integer;
+
+begin
+
+ btnBuscar.Enabled   := True;
+ btnNovo.Enabled     := True;
+ btnSair.Enabled     := True;
+ btnCancelar.Enabled := False;
+ btnGravar.Enabled   := False;
+ btnEditar.Enabled   := False;
+
+ tsCadastro.Enabled  := False;
+ tsContador.Enabled  := False;
+ tsFiscal.Enabled    := False;
+
+ LimparCampos;
+
+end;
+
+procedure TForm1.btnEditarClick(Sender: TObject);
+begin
+ tsCadastro.Enabled:= True;
+ tsContador.Enabled:= True;
+ tsFiscal.Enabled:= True;
+
+ btnBuscar.Enabled:= False;
+ btnCancelar.Enabled:= True;
+ btnGravar.Enabled:= True;
+ btnNovo.Enabled:= False;
+
+ quemChamou:= 'Editar';
+end;
+
+procedure TForm1.btnGravarClick(Sender: TObject);
+var
+  ListaEmpresa,ListaParam: TStringList;
+begin
+
+
+  if edtNomeCli.Text = '' then
+  begin
+    showMessage('Nome do Cliente Inválido. Confira o Código');
+  end;
+
+  if edtNomeFornec.Text = '' then
+  begin
+    showMessage('Nome do Fornecedor Inválido. Confira o Código');
+  end;
+
+   if edtRazaoSocial.Text = '' then
+  begin
+    showMessage('Preencha a Razão social');
+  end;
+
+  if edtCodMunicipio.Text = '' then
+  begin
+    showMessage('Código de Município inválido. Confira a cidade');
+  end;
+
+
+
+  ListaParam := MontaCamposValores('PARAMETRIZACAO');
+  ListaEmpresa := MontaCamposValores('EMPRESA');
+  try
+    if quemChamou = 'Editar' then
+    begin
+      UpdateEmpresa(ListaParam, 'PARAMETRIZACAO');
+      UpdateEmpresa(ListaEmpresa,'EMPRESA');
+    end
+
+    else if quemChamou = 'Novo' then
+    BEGIN
+      InsertEmpresa(ListaEmpresa,'EMPRESA');
+      UpdateEmpresa(ListaParam, 'PARAMETRIZACAO');
+    END;
+
+
+
+    quemChamou := '';
+  finally
+    ListaParam.Free;
+  end;
+
+  btnCancelarClick(Sender);
+
+end;
+
+
+
+procedure TForm1.btnNovoClick(Sender: TObject);
+
+var
+proxCod: Integer;
+
+begin
+
+ LimparCampos;
+
+ btnBuscar.Enabled:= False;
+ btnNovo.Enabled:= False;
+ btnSair.Enabled:= False;
+ btnCancelar.Enabled:= True;
+ btnGravar.Enabled:= True;
+
+ tsCadastro.Enabled:= True;
+ tsContador.Enabled:= True;
+ tsFiscal.Enabled:= True;
+
+   // Cria, mostra modal e destrói ao fechar
+  with TForm3.Create(Self) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
+
+ cbEnviarApp.ItemIndex := 0;
+ cbTransportadora.ItemIndex := 1;
+ cbBloqNfNContribEstadual.ItemIndex := 1;
+ cbBloqNfNContribInter.ItemIndex := 1;
+ cbBloqNfPfEstadual.ItemIndex := 1;
+ cbBloqNfPfInter.ItemIndex := 1;
+
+
+ edtCodigo.Text:= ('0'+InttoStr(ProxCodEmpresa));
+ edtSerie.Text:= '1';
+ CarregarParametrizacao;
+
+ quemChamou:= 'Novo';
+
+
+
+
+
+end;
+
+procedure TForm1.btnSairClick(Sender: TObject);
+begin
+  Close;
+end;
+
+procedure TForm1.bt_consultarClick(Sender: TObject);
+begin
+
+if edtCnpj.Text = '' then
+    begin
+    showMessage('Preencha o Cnpj');
+    exit;
+    end;
+
+
+   // Cria, mostra modal e destrói ao fechar
+  with TForm3.Create(Self) do
+  try
+    ShowModal;
+  finally
+    Free;
+  end;
+
+  if MessageDlg('Deseja Realmente Consultar o Cnpj?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+    // Ação se responder SIM
+    ShowMessage('Você escolheu SIM!');
+  end
+  else
+  begin
+    // Ação se responder NÃO
+    ShowMessage('Você escolheu NÃO!');
+  end;
+
+
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+  cbUf.Items.Clear;
+  cbUf.Items.AddStrings(['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA',
+                              'MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN',
+                              'RS','RO','RR','SC','SP','SE','TO']);
+
+  cbUfContador.Items.Clear;
+  cbUfContador.Items.AddStrings(['AC','AL','AP','AM','BA','CE','DF','ES','GO','MA',
+                              'MT','MS','MG','PA','PB','PR','PE','PI','RJ','RN',
+                              'RS','RO','RR','SC','SP','SE','TO']);
+
+  cbTipoTribut.Items.Clear;
+  cbtipotribut.Items.AddStrings(['1 - Simples Nacional','2 - Lucro Presumido', '3 - Lucro Real' ]);
+
+  cbEnviarApp.Items.Clear;
+  cbEnviarApp.Items.AddStrings(['S','N']);
+
+  cbTransportadora.Items.Clear;
+  cbTransportadora.Items.AddStrings(['S','N']);
+
+  cbBloqNfNContribEstadual.Items.Clear;
+  cbBloqNfNContribEstadual.Items.AddStrings(['S','N']);
+
+  cbBloqNfNContribInter.Items.Clear;
+  cbBloqNfNContribInter.Items.AddStrings(['S','N']);
+
+  cbBloqNfPfEstadual.Items.Clear;
+  cbBloqNfPfEstadual.Items.AddStrings(['S','N']);
+
+  cbBloqNfPfInter.Items.Clear;
+  cbBloqNfPfInter.Items.AddStrings(['S','N']);
+
+  cbUsaCredPisCofins.Items.Clear;
+  cbUsaCredPisCofins.Items.AddStrings(['S','N']);
+
+  cbUsaCredIcms.Items.Clear;
+  cbUsaCredIcms.Items.AddStrings(['S','N']);
+
+end;
+
+procedure TForm1.LimparCampos;
+var
+  i: Integer;
+begin
+  for i := 0 to ComponentCount - 1 do
+  begin
+    if Components[i] is TEdit then
+      (Components[i] as TEdit).Clear
+    else if Components[i] is TComboBox then
+      (Components[i] as TComboBox).ItemIndex := -1;
+  end;
+end;
+
+function TForm1.ProxCodEmpresa: Integer;
+var
+
+proxCodEmpresa: Integer;
+
+begin
+    FDQuery1.Close;
+    FDQuery1.SQL.Clear;
+    FDQuery1.SQL.Add('SELECT MAX(CODFILIAL) AS CODFILIAL FROM AC_CADASTRO_EMPRESA');
+    FDQuery1.Open;
+
+    if FDQuery1.Fields[0].IsNull then
+    begin
+      proxCodEmpresa:= 1;
+
+    end
+    else
+    begin
+     proxCodEmpresa:= FDQuery1.FieldByName('CODFILIAL').AsInteger + 1;
+    end;
+
+    result:= proxCodEmpresa;
+
+end;
+
+// Função que cria dinamicamente uma lista de "Campo=Valor"
+// Isso centraliza a lógica de quais campos serão gravados
+function TForm1.MontaCamposValores(Tabela: String): TStringList;
+
+var
+
+ListaEmpresa,ListaParam: TStringList;
+
+begin
+
+  ListaEmpresa := TStringList.Create;
+  ListaParam   := TStringList.Create;
+
+  // -------- Identificação / cadastro --------
+  if Trim(edtCodigo.Text) <> ''        then ListaEmpresa.Add('CODFILIAL='      + Trim(edtCodigo.Text));
+  if Trim(edtRazaoSocial.Text) <> ''   then ListaEmpresa.Add('FILIAL='         + Trim(edtRazaoSocial.Text)); // Razão social
+  if Trim(edtFantasia.Text) <> ''      then ListaEmpresa.Add('NOMEFANTASIA='   + Trim(edtFantasia.Text));
+  if Trim(edtCnpj.Text) <> ''          then ListaEmpresa.Add('CPFCNPJ='        + Trim(edtCnpj.Text));
+  if Trim(edtIe.Text) <> ''            then ListaEmpresa.Add('IE='             + Trim(edtIe.Text));
+  if Trim(edtEmail.Text) <> ''         then ListaEmpresa.Add('EMAIL='          + Trim(edtEmail.Text));
+  if Trim(edtCodCli.Text) <> ''        then ListaEmpresa.Add('CODCLI='         + Trim(edtCodCli.Text));
+  if Trim(edtCodFornec.Text) <> ''     then ListaEmpresa.Add('CODFORNEC='      + Trim(edtCodFornec.Text));
+  if Trim(edtTelefone.Text) <> ''      then ListaEmpresa.Add('TELEFONE='       + Trim(edtTelefone.Text));
+
+  // -------- Endereço da empresa --------
+  if Trim(edtEndereco.Text) <> ''      then ListaEmpresa.Add('ENDERECO='       + Trim(edtEndereco.Text));
+  if Trim(edtBairro.Text) <> ''        then ListaEmpresa.Add('BAIRRO='         + Trim(edtBairro.Text));
+  if Trim(edtCidade.Text) <> ''        then ListaEmpresa.Add('CIDADE='         + Trim(edtCidade.Text));
+  if Trim(edtCep.Text) <> ''           then ListaEmpresa.Add('CEP='            + Trim(edtCep.Text));
+  if Trim(edtComplemento.Text) <> ''   then ListaEmpresa.Add('COMPLEMENTO='    + Trim(edtComplemento.Text));
+  if Trim(edtCodMunicipio.Text) <> ''  then ListaEmpresa.Add('CODMUNICIPIO='   + Trim(edtCodMunicipio.Text));
+
+  // espelhar o mesmo valor nos dois:
+  if Trim(cbUf.Text) <> '' then
+  begin
+    ListaEmpresa.Add('UF='     + Trim(cbUf.Text));
+    ListaEmpresa.Add('ESTADO=' + Trim(cbUf.Text));
+  end;
+
+  // -------- Numeração / configurações fiscais --------
+  if Trim(edtProxNumNfe.Text) <> ''    then ListaEmpresa.Add('PROXNUMNOTA='           + Trim(edtProxNumNfe.Text));
+  if Trim(edtSerie.Text) <> ''         then ListaEmpresa.Add('SERIE='                 + Trim(edtSerie.Text));
+  if Trim(edtProxNumNfce.Text) <> ''   then ListaEmpresa.Add('PROXNUMNFCONSUMIDOR='   + Trim(edtProxNumNfce.Text));
+  if Trim(edtDirNfe.Text) <> ''        then ListaEmpresa.Add('DIRNFE='                + Trim(edtDirNfe.Text));
+  if Trim(edtProxNumCte.Text) <> ''    then ListaEmpresa.Add('PROXNUMCONHEC='         + Trim(edtProxNumCte.Text));
+  if Trim(edtProxNumMdfe.Text) <> ''   then ListaEmpresa.Add('PROXNUMMDFE='           + Trim(edtProxNumMdfe.Text));
+  if Trim(edtDirMdfe.Text) <> ''       then ListaEmpresa.Add('DIRMDFE='               + Trim(edtDirMdfe.Text));
+  if Trim(edtPerProtege.Text) <> ''    then ListaEmpresa.Add('PER_PROTEGE='               + Trim(edtPerProtege.Text));
+  if Trim(cbTransportadora.Text) <> ''         then ListaEmpresa.Add('TRANSPORTADORA='        + Trim(cbTransportadora.Text));
+  if Trim(cbBloqNfNContribEstadual.Text) <> '' then ListaEmpresa.Add('BLOQ_NF_N_CONTRIB_ESTADUAL='        + Trim(cbBloqNfNContribEstadual.Text));
+  if Trim(cbBloqNfNContribInter.Text) <> ''    then ListaEmpresa.Add('BLOQ_NF_N_CONTRIB_INTEREST='        + Trim(cbBloqNfNContribInter.Text));
+  if Trim(cbBloqNfPfEstadual.Text) <> ''       then ListaEmpresa.Add('BLOQ_NF_PF_ESTADUAL='        + Trim(cbBloqNfPfEstadual.Text));
+  if Trim(cbBloqNfPfInter.Text) <> ''          then ListaEmpresa.Add('BLOQ_NF_PF_INTEREST='        + Trim(cbBloqNfPfInter.Text));
+  if Trim(cbEnviarApp.Text) <> ''              then ListaEmpresa.Add('DISP_APP='        + Trim(cbEnviarApp.Text));
+
+
+  // -------- Dados do contador --------
+  if Trim(edtNomeContador.Text) <> ''        then ListaEmpresa.Add('CONTADORNOME='        + Trim(edtNomeContador.Text));
+  if Trim(edtCpfCnpjContador.Text) <> ''     then ListaEmpresa.Add('CONTADORCPFCNPJ='     + Trim(edtCpfCnpjContador.Text));
+  if Trim(edtCrcContador.Text) <> ''         then ListaEmpresa.Add('CONTADORCRC='         + Trim(edtCrcContador.Text));
+  if Trim(cbUfContador.Text) <> ''           then ListaEmpresa.Add('CONTADORUF='          + Trim(cbUfContador.Text));
+  if Trim(edtCepContador.Text) <> ''         then ListaEmpresa.Add('CONTADORCEP='         + Trim(edtCepContador.Text));
+  if Trim(edtEnderecoContador.Text) <> ''    then ListaEmpresa.Add('CONTADORENDERECO='    + Trim(edtEnderecoContador.Text));
+  if Trim(edtComplementoContador.Text) <> '' then ListaEmpresa.Add('CONTADORCOMPLEMENTO=' + Trim(edtComplementoContador.Text));
+  if Trim(edtBairroContador.Text) <> ''      then ListaEmpresa.Add('CONTADORBAIRRO='      + Trim(edtBairroContador.Text));
+  if Trim(edtTelefoneContador.Text) <> ''    then ListaEmpresa.Add('CONTADORTELEFONE='    + Trim(edtTelefoneContador.Text));
+  if Trim(edtEmailContador.Text) <> ''       then ListaEmpresa.Add('CONTADOREMAIL='       + Trim(edtEmailContador.Text));
+
+
+   if Trim(cbTipoTribut.Text) <> ''     then
+
+   begin
+      if  cbTipoTribut.ItemIndex = 0 then
+      begin
+         ListaEmpresa.Add('TIPOTRIBUT='            + '1');
+      end
+      else if  cbTipoTribut.ItemIndex = 1 then
+      begin
+         ListaEmpresa.Add('TIPOTRIBUT='            + '2');
+      end
+      else if  cbTipoTribut.ItemIndex = 2 then
+      begin
+         ListaEmpresa.Add('TIPOTRIBUT='            + '3');
+      end;
+   end;
+
+
+   //CADASTRO PARAMETRIZAÇÃO
+   if Trim(cbUsaCredIcms.Text) <> ''            then ListaParam.Add('USACREDICM='        + Trim(cbUsaCredIcms.Text));
+   if Trim(cbUsaCredPisCofins.Text) <> ''       then ListaParam.Add('USACREDPISCOFINS='        + Trim(cbUsaCredPisCofins.Text));
+   if Trim(edtProxCodFornec.Text) <> ''         then ListaParam.Add('PROXCODFORNEC='        + Trim(edtProxCodFornec.Text));
+   if Trim(edtProxCodCli.Text) <> ''            then ListaParam.Add('PROXCODCLI='        + Trim(edtProxCodCli.Text));
+   if Trim(edtProxCodProd.Text) <> ''           then ListaParam.Add('PROXCODPROD='        + Trim(edtProxCodProd.Text));
+   if Trim(edtDirTelas.Text) <> ''              then ListaParam.Add('DIRETORIO_TELAS='        + Trim(edtDirTelas.Text));
+
+
+     // ---------- Retorno conforme tabela ----------
+  if SameText(Tabela, 'EMPRESA') then
+  begin
+    Result := ListaEmpresa;
+    ListaParam.Free; // libera o que não será usado
+  end
+  else if SameText(Tabela, 'PARAMETRIZACAO') then
+  begin
+    Result := ListaParam;
+    ListaEmpresa.Free;
+  end
+  else
+  begin
+    Result := TStringList.Create; // retorna vazio
+    ListaEmpresa.Free;
+    ListaParam.Free;
+  end;
+
+end;
+
+
+// edtCodCliChange
+procedure TForm1.edtCodCliChange(Sender: TObject);
+begin
+  if edtCodigo.Text <> '' then
+  begin
+    try
+      FDQuery1.Close;
+      FDQuery1.SQL.Clear;
+      FDQuery1.SQL.Add('SELECT CLIENTE FROM AC_CADASTRO_CLIENTES WHERE CODCLI = :codigobuscar');
+      FDQuery1.Params.ParamByName('codigobuscar').Value := edtCodCli.Text;
+      FDQuery1.Open;
+
+      if not FDQuery1.Fields[0].IsNull then
+        edtNomeCli.Text := FDQuery1.Fields[0].AsString
+      else
+        edtNomeCli.Clear;
+    finally
+      FDQuery1.Close;
+    end;
+  end
+  else
+    edtNomeCli.Clear;
+end;
+
+// edtCodFornecChange
+procedure TForm1.edtCodFornecChange(Sender: TObject);
+begin
+  if edtCodFornec.Text <> '' then
+  begin
+    try
+      FDQuery1.Close;
+      FDQuery1.SQL.Clear;
+      FDQuery1.SQL.Add('SELECT FORNECEDOR FROM AC_CADASTRO_FORNECEDORES WHERE CODFORNEC = :codigobuscar');
+      FDQuery1.Params.ParamByName('codigobuscar').Value := edtCodFornec.Text;
+      FDQuery1.Open;
+
+      if not FDQuery1.Fields[0].IsNull then
+        edtNomeFornec.Text := FDQuery1.Fields[0].AsString
+      else
+        edtNomeFornec.Clear;
+    finally
+      FDQuery1.Close;
+    end;
+  end
+  else
+    edtNomeFornec.Clear;
+end;
+
+
+procedure TForm1.edtCodmunicipioChange(Sender: TObject);
+var
+  qryCodMunicipio: TFDQuery;
+  cidade: String;
+begin
+  qryCodMunicipio := TFDQuery.Create(nil);
+  try
+    qryCodMunicipio.Connection := FDConnection1;
+
+    qryCodMunicipio.Close;
+    qryCodMunicipio.SQL.Clear;
+    qryCodMunicipio.SQL.Text := 'SELECT * FROM AC_CADASTRO_CIDADES WHERE CIDADE = :cidade';
+    qryCodMunicipio.Params.ParamByName('cidade').Value := edtCidade.Text;
+    qryCodMunicipio.Open;
+
+    edtCodMunicipio.Text := qryCodMunicipio.FieldByName('CODMUNICIPIO').AsString;
+    SelecionarItemCombo(cbUf, qryCodMunicipio.FieldByName('CODUF').AsString);
+
+  finally
+    qryCodMunicipio.Free;
+  end;
+end;
+
+
+// Função responsável por inserir uma nova empresa no banco
+// InsertEmpresa
+procedure TForm1.InsertEmpresa(Lista: TStringList; Tabela: String);
+var
+  qryEmpresa, qryParam: TFDQuery;
+  CamposEmpresa, ValoresEmpresa, CamposParam, ValoresParam: string;
+  i: Integer;
+begin
+  qryEmpresa := TFDQuery.Create(nil);
+  qryParam := TFDQuery.Create(nil);
+  try
+    qryEmpresa.Connection := FDConnection1;
+    qryParam.Connection := FDConnection1;
+
+    if Tabela = 'EMPRESA' then
+    begin
+      CamposEmpresa := '';
+      ValoresEmpresa := '';
+      for i := 0 to Lista.Count - 1 do
+      begin
+        CamposEmpresa := CamposEmpresa + Lista.Names[i] + ', ';
+        ValoresEmpresa := ValoresEmpresa + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
+      end;
+      Delete(CamposEmpresa, Length(CamposEmpresa)-1, 2);
+      Delete(ValoresEmpresa, Length(ValoresEmpresa)-1, 2);
+
+      qryEmpresa.SQL.Text := 'INSERT INTO AC_CADASTRO_EMPRESA (' + CamposEmpresa + ') ' +
+                             'VALUES (' + ValoresEmpresa + ')';
+      qryEmpresa.ExecSQL;
+      ShowMessage('Registro de empresa inserido com sucesso!');
+    end
+    else if Tabela = 'PARAMETRIZACAO' then
+    begin
+      CamposParam := '';
+      ValoresParam := '';
+      for i := 0 to Lista.Count - 1 do
+      begin
+        CamposParam := CamposParam + Lista.Names[i] + ', ';
+        ValoresParam := ValoresParam + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
+      end;
+      Delete(CamposParam, Length(CamposParam)-1, 2);
+      Delete(ValoresParam, Length(ValoresParam)-1, 2);
+
+      qryParam.SQL.Text := 'INSERT INTO AC_CADASTRO_PARAMETRIZACAO (' + CamposParam + ') ' +
+                           'VALUES (' + ValoresParam + ')';
+      qryParam.ExecSQL;
+      ShowMessage('Registro de parametrizações inserido com sucesso!');
+    end;
+  finally
+    qryEmpresa.Free;
+    qryParam.Free;
+  end;
+end;
+
+
+// UpdateEmpresa
+procedure TForm1.UpdateEmpresa(Lista: TStringList; Tabela: String);
+var
+  qryEmpresa, qryParam: TFDQuery;
+  Sets: string;
+  i: Integer;
+begin
+  qryEmpresa := TFDQuery.Create(nil);
+  qryParam := TFDQuery.Create(nil);
+  try
+    qryEmpresa.Connection := FDConnection1;
+    qryParam.Connection := FDConnection1;
+
+    if Tabela = 'EMPRESA' then
+    begin
+      Sets := '';
+      for i := 0 to Lista.Count - 1 do
+      begin
+        if UpperCase(Lista.Names[i]) <> 'CODFILIAL' then
+          Sets := Sets + Lista.Names[i] + ' = ' + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
+      end;
+      Delete(Sets, Length(Sets)-1, 2);
+      qryEmpresa.SQL.Text := 'UPDATE AC_CADASTRO_EMPRESA SET ' + Sets +
+                             ' WHERE CODFILIAL = ' + QuotedStr(edtCodigo.Text);
+      qryEmpresa.ExecSQL;
+      ShowMessage('Registro atualizado com sucesso!');
+    end
+    else if Tabela = 'PARAMETRIZACAO' then
+    begin
+      Sets := '';
+      for i := 0 to Lista.Count - 1 do
+      begin
+        if UpperCase(Lista.Names[i]) <> 'CODFILIAL' then
+          Sets := Sets + Lista.Names[i] + ' = ' + QuotedStr(Lista.ValueFromIndex[i]) + ', ';
+      end;
+      Delete(Sets, Length(Sets)-1, 2);
+      qryParam.SQL.Text := 'UPDATE AC_CADASTRO_PARAMETRIZACAO SET ' + Sets +
+                           ' WHERE CODFILIAL = ' + QuotedStr(edtCodigo.Text);
+      qryParam.ExecSQL;
+      ShowMessage('Registro atualizado com sucesso!');
+    end;
+  finally
+    qryEmpresa.Free;
+    qryParam.Free;
+  end;
+end;
+
+
+procedure TForm1.SelecionarItemCombo(Combo: TComboBox; Valor: String);
+begin
+  Combo.ItemIndex := Combo.Items.IndexOf(Valor);
+end;
+
+procedure TForm1.SomenteNumeros(Sender: TObject; var Key: Char);
+begin
+  if not (Key in ['0'..'9', #8]) then
+    Key := #0;
+end;
+
+procedure TForm1.CarregarParametrizacao;
+var
+  qryParam: TFDQuery;
+begin
+  qryParam := TFDQuery.Create(nil);
+   try
+    qryParam.Connection := FDConnection1;
+    qryParam.SQL.Clear;
+    qryParam.SQL.Text :=
+      'SELECT * FROM AC_CADASTRO_PARAMETRIZACAO';
+    qryParam.Open;
+
+   if qryParam.IsEmpty then
+    begin
+      ShowMessage('Falha ao abrir cadastro de parametrização!');
+      Exit;
+    end;
+
+
+    // -------- Parametrizações / cadastro --------
+    edtDirTelas.Text        := qryParam.FieldByName('DIRETORIO_TELAS').AsString;
+    edtProxCodCli.Text      := qryParam.FieldByName('PROXCODCLI').AsString;
+    edtProxCodFornec.Text   := qryParam.FieldByName('PROXCODFORNEC').AsString;
+    edtProxCodProd.Text     := qryParam.FieldByName('PROXCODPROD').AsString;
+    cbUsaCredIcms.Text      := qryParam.FieldByName('USACREDICM').AsString;
+    cbUsaCredPisCofins.Text      := qryParam.FieldByName('USACREDPISCOFINS').AsString;
+
+  finally
+    qryParam.Free;
+  end;
+end;
+
+
+end.

@@ -1,7 +1,7 @@
 object Form3: TForm3
   Left = 0
   Top = 0
-  Caption = 'Form3'
+  BorderIcons = [biSystemMenu, biMinimize]
   ClientHeight = 177
   ClientWidth = 683
   Color = clBtnFace
@@ -11,6 +11,7 @@ object Form3: TForm3
   Font.Name = 'Segoe UI'
   Font.Style = []
   Position = poScreenCenter
+  OnCreate = FormCreate
   TextHeight = 15
   object pn1_api: TPanel
     Left = 0
@@ -20,11 +21,11 @@ object Form3: TForm3
     Align = alTop
     TabOrder = 0
     object Button1: TButton
-      Left = 576
+      Left = 552
       Top = 19
-      Width = 99
+      Width = 115
       Height = 29
-      Caption = 'Voltar'
+      Caption = 'Cadastro Manual'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -12

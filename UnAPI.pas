@@ -22,6 +22,7 @@ type
     procedure bt_consultarClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure edtCNPJChange(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -166,5 +167,12 @@ end;
 
 
 
+
+procedure TForm3.FormCreate(Sender: TObject);
+begin
+  if Form1.edtCnpj.Text <> '' then
+    ed_consultaCnpj.text := Form1.edtCnpj.Text;
+
+end;
 
 end.

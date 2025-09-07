@@ -1,0 +1,93 @@
+object Form3: TForm3
+  Left = 0
+  Top = 0
+  Caption = 'Form3'
+  ClientHeight = 177
+  ClientWidth = 683
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -12
+  Font.Name = 'Segoe UI'
+  Font.Style = []
+  Position = poScreenCenter
+  TextHeight = 15
+  object pn1_api: TPanel
+    Left = 0
+    Top = 0
+    Width = 683
+    Height = 65
+    Align = alTop
+    TabOrder = 0
+    object Button1: TButton
+      Left = 552
+      Top = 19
+      Width = 115
+      Height = 29
+      Caption = 'Cadastro Manual'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 0
+      OnClick = Button1Click
+    end
+  end
+  object pn2Api: TPanel
+    Left = 0
+    Top = 65
+    Width = 683
+    Height = 112
+    Align = alClient
+    TabOrder = 1
+    object ed_consultaCnpj: TEdit
+      Left = 64
+      Top = 32
+      Width = 385
+      Height = 36
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -20
+      Font.Name = 'Segoe UI'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 0
+      OnChange = edtCNPJChange
+    end
+    object bt_consultar: TButton
+      Left = 488
+      Top = 32
+      Width = 137
+      Height = 41
+      Caption = 'Consultar'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -12
+      Font.Name = 'Segoe UI'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 1
+      OnClick = bt_consultarClick
+    end
+  end
+  object RESTClient1: TRESTClient
+    Params = <>
+    SynchronizedEvents = False
+    Left = 240
+    Top = 16
+  end
+  object RESTRequest1: TRESTRequest
+    Client = RESTClient1
+    Params = <>
+    Response = RESTResponse1
+    SynchronizedEvents = False
+    Left = 280
+    Top = 16
+  end
+  object RESTResponse1: TRESTResponse
+    Left = 320
+    Top = 16
+  end
+end

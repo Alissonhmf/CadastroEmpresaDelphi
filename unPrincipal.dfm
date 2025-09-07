@@ -3,7 +3,7 @@ object Form1: TForm1
   Top = 0
   BorderIcons = [biSystemMenu, biMinimize]
   BorderStyle = bsSingle
-  Caption = 'Form1'
+  Caption = 'Cadastro Empresa 30a.08.25'
   ClientHeight = 387
   ClientWidth = 707
   Color = clBtnFace
@@ -156,6 +156,7 @@ object Form1: TForm1
         Height = 249
         Align = alTop
         TabOrder = 0
+        ExplicitTop = -2
         object lbCodigo: TLabel
           Left = 9
           Top = 8
@@ -320,7 +321,7 @@ object Form1: TForm1
         object edtCnpj: TEdit
           Left = 453
           Top = 27
-          Width = 231
+          Width = 161
           Height = 23
           CharCase = ecUpperCase
           Font.Charset = DEFAULT_CHARSET
@@ -436,6 +437,16 @@ object Form1: TForm1
           ParentFont = False
           ReadOnly = True
           TabOrder = 10
+        end
+        object bt_consultar: TButton
+          Left = 620
+          Top = 26
+          Width = 64
+          Height = 25
+          Caption = 'Consultar'
+          Enabled = False
+          TabOrder = 11
+          OnClick = bt_consultarClick
         end
       end
       object pn2: TPanel
