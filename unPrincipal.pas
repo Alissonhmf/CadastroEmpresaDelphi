@@ -189,9 +189,6 @@ begin
     btnEditar.Enabled:= True;
     end;
 
-
-
-
 end;
 
 procedure TForm1.CarregarEmpresa(Codigo: Integer);
@@ -469,7 +466,7 @@ if edtCnpj.Text = '' then
     exit;
     end;
 
-  if MessageDlg('Deseja Realmente Consultar o Cnpj, isso pode sobreescrever os dados?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  if MessageDlg('Deseja Realmente Consultar o Cnpj, isso pode sobreescrever os dados', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
   begin
      with TForm3.Create(Self) do
       try

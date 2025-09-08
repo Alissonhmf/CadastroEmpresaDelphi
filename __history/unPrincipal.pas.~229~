@@ -128,6 +128,7 @@ type
     cbBloqNfPfInter: TComboBox;
     FDConnection1: TFDConnection;
     FDQuery1: TFDQuery;
+    bt_consultar: TButton;
     procedure btnSairClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure btnNovoClick(Sender: TObject);
@@ -147,6 +148,7 @@ type
     procedure edtCodmunicipioChange(Sender: TObject);
     procedure SomenteNumeros(Sender: TObject; var Key: Char);
     procedure CarregarParametrizacao;
+    procedure bt_consultarClick(Sender: TObject);
   private
     { Private declarations }
   public
@@ -168,6 +170,7 @@ unApi;
 //Versao 1 25/08/2025
 //Versao 2 29/08/2025
 //Versao 3 30/08/2025 API para consultar CNPJ
+//Versao 4 07/09/2025 Possibilidade de consultar apertando em buscar
 
 procedure TForm1.btnBuscarClick(Sender: TObject);
 var
@@ -323,6 +326,7 @@ begin
  btnCancelar.Enabled := False;
  btnGravar.Enabled   := False;
  btnEditar.Enabled   := False;
+ bt_Consultar.Enabled:= False;
 
  tsCadastro.Enabled  := False;
  tsContador.Enabled  := False;
@@ -342,6 +346,7 @@ begin
  btnCancelar.Enabled:= True;
  btnGravar.Enabled:= True;
  btnNovo.Enabled:= False;
+ bt_consultar.Enabled:=True;
 
  quemChamou:= 'Editar';
 end;
@@ -416,6 +421,7 @@ begin
  btnSair.Enabled:= False;
  btnCancelar.Enabled:= True;
  btnGravar.Enabled:= True;
+ bt_consultar.Enabled:=True;
 
  tsCadastro.Enabled:= True;
  tsContador.Enabled:= True;
@@ -452,6 +458,32 @@ end;
 procedure TForm1.btnSairClick(Sender: TObject);
 begin
   Close;
+end;
+
+procedure TForm1.bt_consultarClick(Sender: TObject);
+begin
+
+if edtCnpj.Text = '' then
+    begin
+    showMessage('Preencha o Cnpj');
+    exit;
+    end;
+
+  if MessageDlg('Deseja Realmente Consultar o Cnpj, isso pode sobreescrever os dados?', mtConfirmation, [mbYes, mbNo], 0) = mrYes then
+  begin
+     with TForm3.Create(Self) do
+      try
+       ShowModal;
+      finally
+        Free;
+      end;
+  end
+  else
+  begin
+   //Não acontece nada
+  end;
+
+
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);
